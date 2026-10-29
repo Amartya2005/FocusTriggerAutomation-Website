@@ -1,0 +1,132 @@
+/*
+ * FocusTrigger design tokens — the single source for colour, type, spacing,
+ * radius, elevation and motion. Components consume these variables; do not
+ * hard-code values in component styles.
+ *
+ * Breakpoints (CSS variables cannot be used inside media queries, so these
+ * literal values are the convention for every stylesheet):
+ *   sm 640px · md 768px · lg 1024px · xl 1280px  (mobile-first, min-width)
+ */
+
+:root {
+  /* ---- Colour: brand ---- */
+  --color-primary: #0b5fff; /* CTAs, links, emphasis. 5.1:1 on white. */
+  --color-primary-hover: #0847b8;
+  --color-primary-soft: #e8f0ff; /* tinted backgrounds behind primary content */
+  --color-accent: #00c2a8; /* small accents/diagrams only — never body text on white */
+  --color-accent-soft: #e0f8f4;
+
+  /* ---- Colour: neutrals ---- */
+  --color-text: #0f172a; /* main text, dark surfaces */
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b; /* 4.8:1 on white; use --color-text-secondary on soft backgrounds */
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f1f5f9;
+  --color-surface-subtle: #fafafa;
+
+  /* ---- Colour: dark surfaces (footer, contrast sections) ---- */
+  --color-dark-surface: #0f172a;
+  --color-dark-surface-raised: #1e293b;
+  --color-dark-border: #334155;
+  --color-dark-text: #f8fafc;
+  --color-dark-text-secondary: #cbd5e1;
+  --color-dark-text-muted: #94a3b8;
+  --color-dark-link-hover: #ffffff;
+
+  /* ---- Colour: status ---- */
+  --color-error: #dc2626;
+  --color-error-soft: #fef2f2;
+  --color-warning: #d97706;
+  --color-warning-soft: #fffbeb;
+  --color-success: #16a34a;
+  --color-success-soft: #f0fdf4;
+
+  /* ---- Focus ---- */
+  --focus-ring-color: #0b5fff;
+  --focus-ring: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--focus-ring-color);
+  --focus-ring-on-dark: 0 0 0 3px var(--color-dark-surface), 0 0 0 5px #7aa7ff;
+
+  /* ---- Typography ---- */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Fluid scale: mobile minimum → desktop maximum */
+  --font-size-display: clamp(2.125rem, 1.4rem + 3.2vw, 4rem); /* 34 → 64px */
+  --font-size-h1: clamp(1.875rem, 1.45rem + 1.9vw, 3rem); /* 30 → 48px */
+  --font-size-h2: clamp(1.5625rem, 1.3rem + 1.1vw, 2.25rem); /* 25 → 36px */
+  --font-size-h3: clamp(1.25rem, 1.15rem + 0.5vw, 1.625rem); /* 20 → 26px */
+  --font-size-h4: 1.125rem; /* 18px */
+  --font-size-body-lg: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem); /* 17 → 19px */
+  --font-size-body: 1rem; /* 16px */
+  --font-size-small: 0.875rem; /* 14px */
+  --font-size-xs: 0.8125rem; /* 13px — labels/eyebrows only */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.15;
+  --line-height-heading: 1.25;
+  --line-height-body: 1.6;
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-eyebrow: 0.08em;
+
+  /* ---- Spacing (4px base) ---- */
+  --space-1: 0.25rem; /* 4 */
+  --space-2: 0.5rem; /* 8 */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-6: 1.5rem; /* 24 */
+  --space-8: 2rem; /* 32 */
+  --space-12: 3rem; /* 48 */
+  --space-16: 4rem; /* 64 */
+  --space-20: 5rem; /* 80 */
+  --space-24: 6rem; /* 96 */
+  --space-32: 8rem; /* 128 */
+
+  /* Section rhythm: ~44px mobile, ~62px tablet, ~88–96px desktop */
+  --section-padding-y: clamp(2.75rem, 1.5rem + 5vw, 6rem);
+  --section-padding-y-compact: clamp(2rem, 1.25rem + 3vw, 4rem);
+
+  /* ---- Layout ---- */
+  --container-max: 75rem; /* 1200px */
+  --container-narrow: 47.5rem; /* 760px */
+  --container-gutter: clamp(1rem, 0.5rem + 2.5vw, 2rem); /* 16 → 32px */
+  --grid-gap: var(--space-6);
+  --grid-gap-lg: var(--space-8);
+  --header-height: 4rem; /* 64px; 72px from md */
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px; /* small controls */
+  --radius-md: 8px; /* inputs */
+  --radius-lg: 12px; /* buttons, cards */
+  --radius-xl: 20px; /* large feature panels only */
+  --radius-full: 999px;
+
+  /* ---- Elevation (restrained) ---- */
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+  --shadow-md: 0 4px 12px rgb(15 23 42 / 0.08);
+  --shadow-lg: 0 12px 32px rgb(15 23 42 / 0.12);
+
+  /* ---- Interaction ---- */
+  --tap-target: 2.75rem; /* 44px minimum for important controls */
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Layering ---- */
+  --z-header: 50;
+  --z-menu: 60;
+  --z-skip-link: 100;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 4.5rem;
+  }
+}

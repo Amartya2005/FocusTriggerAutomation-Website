@@ -1,0 +1,28 @@
+.section {
+  padding-block: var(--section-padding-y);
+}
+
+.compact {
+  padding-block: var(--section-padding-y-compact);
+}
+
+.default {
+  background-color: var(--color-surface);
+}
+
+.soft {
+  background-color: var(--color-surface-soft);
+}
+
+.dark {
+  background-color: var(--color-dark-surface);
+  color: var(--color-dark-text-secondary);
+}
+
+.dark :is(h1, h2, h3, h4) {
+  color: var(--color-dark-text);
+}
+
+.dark :focus-visible {
+  box-shadow: var(--focus-ring-on-dark);
+}

@@ -1,0 +1,116 @@
+.footer {
+  padding-block: var(--space-16) var(--space-8);
+  background-color: var(--color-dark-surface);
+  color: var(--color-dark-text-secondary);
+  font-size: var(--font-size-small);
+}
+
+.footer :focus-visible {
+  box-shadow: var(--focus-ring-on-dark);
+}
+
+.top {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.brand {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 26rem;
+  align-content: start;
+}
+
+.wordmark {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-dark-text);
+  text-decoration: none;
+}
+
+.wordmark:hover {
+  color: var(--color-dark-link-hover);
+}
+
+.legalName {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-dark-text);
+}
+
+.summary {
+  line-height: var(--line-height-body);
+}
+
+.contact {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  font-style: normal;
+}
+
+.contact a {
+  color: var(--color-dark-text);
+}
+
+.groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8) var(--space-6);
+}
+
+.groupHeading {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-dark-text-muted);
+}
+
+.links {
+  display: grid;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  color: var(--color-dark-text-secondary);
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--color-dark-link-hover);
+  text-decoration: underline;
+}
+
+.bottom {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-dark-border);
+  color: var(--color-dark-text-muted);
+}
+
+@media (min-width: 768px) {
+  .groups {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .bottom {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .top {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-16);
+  }
+}
