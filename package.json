@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:production": "node scripts/verify-production.mjs --env-only && next build && node scripts/verify-production.mjs --output-only",
+    "verify:production": "node scripts/verify-production.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"

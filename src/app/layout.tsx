@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     locale: site.locale,
     type: "website",
   },
+  // og:image comes from src/app/opengraph-image.png (the official logo on its own background).
+  twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false, email: false, address: false },
 };
 

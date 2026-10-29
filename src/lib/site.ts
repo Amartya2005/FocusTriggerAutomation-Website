@@ -20,6 +20,28 @@ export type FooterGroup = {
   links: NavLink[];
 };
 
+/**
+ * Canonical origin from NEXT_PUBLIC_SITE_URL (read at build time). Trailing
+ * slashes are removed so `${site.url}/path` never contains `//`. A value that
+ * is set but is not an absolute http(s) URL fails the build. When unset, local
+ * development falls back to localhost — production builds must set it (see
+ * `npm run build:production` and README → Deploying to production).
+ */
+function resolveSiteUrl(value: string | undefined): string {
+  const raw = value?.trim();
+  if (!raw) return "http://localhost:3000";
+  let parsed: URL;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    throw new Error(`NEXT_PUBLIC_SITE_URL must be an absolute URL such as https://www.your-domain.example (got "${raw}").`);
+  }
+  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+    throw new Error(`NEXT_PUBLIC_SITE_URL must use http(s) (got "${raw}").`);
+  }
+  return `${parsed.origin}${parsed.pathname}`.replace(/\/+$/, "");
+}
+
 export const site = {
   legalName: "FocusTrigger Automation Private Limited",
   name: "FocusTrigger",
@@ -27,7 +49,7 @@ export const site = {
   description:
     "FocusTrigger Automation Private Limited builds proprietary technology products, beginning with FocusTag, and provides software solutions and technology services for clients.",
   /** Canonical origin; set NEXT_PUBLIC_SITE_URL in each deployment environment. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
   locale: "en_IN",
   /** Official logo supplied by the company (background removed; artwork unchanged). */
   logo: {

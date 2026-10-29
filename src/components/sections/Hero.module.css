@@ -1,4 +1,7 @@
 .hero {
+  /* Darker brand blue keeps the small uppercase label ≥ 4.5:1 over the hero tint
+     (the default primary measured 4.49:1 at its darkest point on mobile). */
+  --eyebrow-color: var(--color-primary-hover);
   position: relative;
   overflow: hidden;
   padding-block: clamp(2rem, 0.75rem + 5vw, 5.5rem) var(--section-padding-y);

@@ -12,8 +12,8 @@ These notes record what has been built, what was tested, and what must be confir
 | 3 | Products and FocusTag | Complete and approved (`c6f2395`) |
 | 4 | Software Services | Complete and approved (`aa361ba`) |
 | 5 | About, Contact, Privacy Policy (Work only if real content exists) | Complete and approved (`e09bd51`). The Privacy Policy is still a **draft awaiting company and legal approval**. |
-| 6 | Integration and quality assurance (plus official logo and confirmed email) | Complete, awaiting review |
-| 7 | Launch readiness and handover | Not started |
+| 6 | Integration and quality assurance (plus official logo and confirmed email) | Complete and approved (`4ffbb7c`) |
+| 7 | Launch readiness and handover | Complete, awaiting review. **Launch is NOT approved**; see Phase 7 → Launch checklist. |
 
 ## Phase 1 — Foundation
 
@@ -561,7 +561,7 @@ Items needing company or legal review before publication:
 3. **Privacy or grievance contact:** should `focustriggerautomation@gmail.com` also serve as the privacy contact, or will a separate one be designated?
 4. **Contact form:** keep email only, or provide a form-processing endpoint?
 
-### Launch blockers (as of Phase 6)
+### Launch blockers (as of Phase 6 — superseded by the Phase 7 launch checklist below)
 1. **The Privacy Policy is a draft** awaiting company and legal approval (see Phase 5 → Privacy Policy). This includes designating a privacy or grievance contact, or confirming that the general email serves that role.
 2. **No production domain or hosting** (`NEXT_PUBLIC_SITE_URL`), so canonical URLs, the sitemap, robots and JSON-LD point to localhost. Phase 7.
 3. **No cross-browser and assistive-technology verification:** Firefox, Safari/WebKit, real devices and screen readers have not been tested (see "Not verified").
@@ -571,6 +571,119 @@ Resolved in Phase 6:
 - **No approved logo or favicon:** the official logo and icons are integrated.
 
 Spam protection is only relevant if a form endpoint is added later.
+
+## Phase 7 — Launch readiness and handover
+
+### Launch status: **NOT APPROVED**
+The site builds, passes every automated check below, and is technically ready to receive a production domain. It is **not** approved for launch. The domain and hosting, the Privacy Policy approval, and checks in other browsers and assistive technology are still outstanding (see the checklist). A passing build is not launch approval.
+
+### Audit findings (starting commit `4ffbb7c`)
+| Area | Finding | Action |
+| --- | --- | --- |
+| Dependencies | `npm audit`: 0 vulnerabilities for all dependencies and for production only. Runtime dependencies are only `next` 16.4.3, `react` and `react-dom` 19.3.1. | None needed |
+| Production URL | With `NEXT_PUBLIC_SITE_URL` unset, 76 built files contained `localhost:3000` (canonical, `og:url`, sitemap, robots, JSON-LD). Nothing stopped such a build being deployed, and the value wasn't validated: a trailing slash would give `//`, and invalid values were accepted. | **Fixed** (see below) |
+| Social sharing | No `og:image`; Twitter card `summary`. | **Fixed** |
+| Security headers | None: the routes manifest showed `headers: []`. | **Fixed** |
+| Test artefacts | 0 occurrences of the mock endpoint `localhost:3999`. No secrets in tracked files, history or the bundle (Phase 6 scan). | None needed |
+| Logo consistency | One `Logo` component (header and footer), one source in `site.logo`, no leftover text wordmark. Favicon, app icons and share image all come from the same artwork. | None needed |
+| `.env.example` | It set an *active* placeholder domain, and its form note was out of date. | **Fixed** |
+| Hero label contrast | The small blue label above hero headings measured **4.49:1** against the darkest pixel of the blue hero tint on mobile and tablet (WCAG AA needs 4.5:1). Earlier checks missed it because they ignored the tint layer. | **Fixed** |
+
+### Changes made in Phase 7
+1. **Production URL safety:**
+   - `src/lib/site.ts` (`resolveSiteUrl`) trims the value and strips a trailing slash. If the value is set but isn't an absolute `http(s)` URL, the build fails with a clear message. Unset still means a localhost fallback for local work.
+   - `next.config.ts` prints a prominent warning when a production build has no `NEXT_PUBLIC_SITE_URL`.
+2. **`scripts/verify-production.mjs`** (no dependencies), with npm scripts `verify:production` and **`build:production`** (environment check → `next build` → output scan).
+   - It rejects a missing `NEXT_PUBLIC_SITE_URL` or one that isn't HTTPS, and localhost, loopback or reserved example and test hosts.
+   - It rejects a form endpoint that isn't HTTPS.
+   - It rejects rendered output (HTML, RSC payloads, robots, sitemap, metadata) containing localhost or example-domain URLs, and client bundles containing a test endpoint.
+   - It requires robots and the sitemap to use the configured domain.
+3. **Open Graph and Twitter:**
+   - `src/app/opengraph-image.png` (1200×630) is the **unmodified** logo crop, scaled 1.25× and centred on the logo's own background colour. It is generated by `scripts/make-brand-assets.py`. Its alt text is in `opengraph-image.alt.txt`.
+   - `pageMetadata()` now lists the image explicitly. Without that, page-level `openGraph` objects dropped it: only the homepage had it before the fix, now all 7 pages do.
+   - The Twitter card is now `summary_large_image`.
+4. **Security headers** (`next.config.ts`, all routes): CSP, `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options` and `Permissions-Policy`, as listed in README → Deploying.
+   - The CSP `connect-src` automatically includes the form endpoint's origin when one is configured at build time.
+   - HSTS is deliberately left to the HTTPS host.
+5. **Hero label contrast:** the label above hero headings now uses `--color-primary-hover` (#0847B8). Worst-case measured contrast went from **4.49:1 to 7.06:1**. This changes one element, using an existing token; it is not a redesign.
+6. **Docs:**
+   - `.env.example`: the domain is now blank and marked required for production; the form note is corrected.
+   - README: environment table, scripts, "Deploying to production", "Rollback" and "Launch checklist" sections.
+
+### Tests actually executed (Phase 7)
+All in Chromium (Playwright, plus Lighthouse's Chromium) on this environment's production builds.
+
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` / `npm run lint` | Passed / passed (0 problems) |
+| `npm run build` (clean, no domain) | Passed. It printed the "NEXT_PUBLIC_SITE_URL is not set" warning, as intended. |
+| `npm audit` (all; `--omit=dev`) | 0 vulnerabilities / 0 vulnerabilities |
+| **Guard, environment checks** | **Rejected:** unset domain; `http://www.focus.test`; `https://www.example.com`; `https://localhost:3000`; `not-a-url`; an `http://` form endpoint. **Accepted:** a hypothetical `https://` host (used only to exercise the passing branch). |
+| Build with an invalid domain (`not-a-url`) | Build failed with the clear `NEXT_PUBLIC_SITE_URL must be an absolute URL…` error, as intended. |
+| **Temporary build with `https://www.example.com/`** (reserved test domain, trailing slash on purpose; not committed) | Canonical, `og:url`, `og:image`, robots, all 7 sitemap entries and the JSON-LD use the domain. **0 localhost references** in rendered output. **0 `//`**. |
+| **Guard, output scan** | **Rejected** the example-domain build and the local (localhost) build. **Passed** the hypothetical-HTTPS end-to-end `npm run build:production`. With no domain, `build:production` stopped before building. |
+| **Security headers** (`curl`, 7 routes plus sitemap, robots, OG image, logo, 404) | All 5 headers present on every response; no `X-Powered-By`. |
+| **Phase 7 browser suite** | **69 passed, 0 failed.** Covered: headers present and **no CSP violations, console errors or failed requests** on all 7 routes at 375, 834 and 1440 px, during the interactive desktop journey (submenu, FAQ, anchor, client-side navigation, enquiry switching) and during the mobile menu journey. Share metadata (`og:image` 1200×630 with alt text, `summary_large_image`) checked on all 7 pages. |
+| **axe-core 4.14** (WCAG 2.0/2.1/2.2 A/AA plus best practice) | **0 violations** on all 7 routes at 1440 and 375 px, and with the mobile menu open, the desktop submenu open, and an enquiry type selected. Each scan left 1 "needs review" item (colour contrast over the hero's tint layer, which axe can't compute), settled by the next row. |
+| Hero contrast measured on rendered pixels (7 routes × 4 sizes) | Before the fix: **4.49:1 (fail)** on Home, Services, About and Contact at 834, 375 and 320 px. After: worst case **7.06:1**. |
+| **Lighthouse 13.6** (7 routes × mobile and desktop presets; local `next start`, simulated throttling) | **Accessibility 100, Best Practices 100, SEO 100 on all 14 runs. Performance 100 on all desktop runs; 93–100 on mobile.** Only two weighted audits were below 0.9: Total Blocking Time on Home mobile (310 ms, score 0.78) and LCP on Services mobile (2.6 s, score 0.87). |
+| Contact-form suite (temporary mock-endpoint build, not committed) **under the new CSP** | **28 passed, 0 failed.** The CSP `connect-src` included the configured endpoint origin, and submissions succeeded. |
+| Regression suites on the final build | Phase 6: 134/134. Phase 5: 177/177. Phase 4: 57/57. Phase 3: 97/97. Phase 2: 63/63. Phase 1: 88/88. |
+| Final local build artefacts | 0 rendered files contain a test host (`localhost:3999`), the example domain or the hypothetical domain. The only remaining `example.com` strings are Next.js framework comments and the form's hint text "name@example.com". |
+
+**Lighthouse detail (Performance / Accessibility / Best Practices / SEO):**
+| Route | Mobile | Desktop | Mobile LCP | Mobile TBT |
+| --- | --- | --- | --- | --- |
+| `/` | 93 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 0.9 s | 310 ms |
+| `/products` | 100 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 0.9 s | 60 ms |
+| `/products/focustag` | 99 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 0.9 s | 100 ms |
+| `/services` | 96 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 2.6 s | 70 ms |
+| `/about` | 99 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 0.9 s | 120 ms |
+| `/contact` | 98 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 2.1 s | 120 ms |
+| `/privacy-policy` | 98 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 2.3 s | 50 ms |
+
+CLS was 0 on every run. These are lab results from a local server, not field data. Real-world numbers depend on the host, CDN and network.
+
+### Not verified (not run here)
+- **Firefox and Safari/WebKit:** only Chromium is installed in this environment.
+- **Real phones and tablets.**
+- **Screen readers:** NVDA, JAWS, VoiceOver and TalkBack.
+- **Real email delivery** to `focustriggerautomation@gmail.com`, and `mailto:` behaviour in real email clients.
+- **Production hosting:** HTTPS, the redirect to one canonical host, HSTS, CDN behaviour, and that headers pass through a proxy.
+- **Field performance:** Core Web Vitals from real users.
+- **Social preview rendering** on Facebook, LinkedIn and X (needs a public URL).
+
+### Launch checklist
+Legend: ✅ complete · ⛔ blocked (needs information or access not yet provided) · ⏳ awaiting approval or action.
+
+| # | Item | Status | Evidence / decision needed |
+| --- | --- | --- | --- |
+| 1 | All 7 pages build and render; links, email links, logo, favicon and icons work | ✅ | Regression suites (Phase 1–7) all passed on the final build; Phase 6 link crawl and asset checks. |
+| 2 | Production URL handling (canonical, OG, sitemap, robots, JSON-LD) ready for a real domain | ✅ | Example-domain build: every URL switched, 0 localhost, no `//`. The guard rejects unsafe values. |
+| 3 | No localhost, test endpoints, mocks or secrets in production output | ✅ (mechanism) / ⛔ (actual production build) | `build:production` enforces it. The real production build can only be made once the domain is known. |
+| 4 | Security headers | ✅ | Present on all responses; no CSP violations. HSTS still needs adding at the host (see 6). |
+| 5 | Choose a domain and hosting provider | ⛔ | **Decision:** which domain (and `www` or the bare domain as canonical), and which Next.js-capable host (or a static host with headers configured manually). |
+| 6 | Configure HTTPS, the canonical-host redirect and HSTS on the host | ⛔ | Depends on 5. |
+| 7 | Set `NEXT_PUBLIC_SITE_URL` and run `npm run build:production` until it passes | ⛔ | Depends on 5. |
+| 8 | Privacy Policy reviewed and approved | ⏳ | Still a **DRAFT awaiting company and legal approval** (Phase 5 list). Includes designating a privacy or grievance contact; the general email is *not* treated as one. |
+| 9 | Cross-browser, device and assistive-technology checks | ⛔ | Not possible here. Needs testing in Firefox and Safari, on real iOS and Android devices, and with NVDA or JAWS, VoiceOver and TalkBack, ideally against a preview deployment. |
+| 10 | Contact channel works end to end | ⏳ | Email links verified in the markup. **Needs:** send a real test email after deployment and confirm it arrives. |
+| 11 | Online form integration decision | ⏳ | **Decision:** keep email only (current), or provide an HTTPS form endpoint. That would require a review of the Privacy Policy's form section and of spam protection. |
+| 12 | Brand decisions | ⏳ | "Focustrigger" vs "FocusTrigger" lettering; a higher-resolution or SVG logo (Phase 6). Not launch blockers. |
+| 13 | FocusTag accuracy (phone-to-phone NFC with QR fallback, separate from the vision) | ✅ | Phase 6 suite: correct wording on all routes, and vision terms only in labelled contexts. |
+| 14 | Disabled contact form can't imply delivery | ✅ | No form controls without an endpoint, no delivery claims, and success only after a 2xx (form suite). |
+| 15 | Release record and rollback preparation | ⏳ | Record the deployed commit SHA, keep the previous deployment, and document the DNS records before the switch (README → Rollback). |
+| 16 | Deploy and run the post-deploy checks | ⛔ | Depends on 5–8. Follow README → "Verifying a deployment". |
+| 17 | Launch approval | ⏳ | Explicit company sign-off after items 5–16. **Not given.** |
+
+### Decisions required from the company
+1. **Production domain and canonical host** (`www` or the bare domain).
+2. **Hosting provider:** one that runs Next.js is recommended, so the security headers apply as built.
+3. **Privacy Policy approval,** and who the privacy or grievance contact is.
+4. **Form integration:** keep email only, or provide an endpoint.
+5. **Who runs the browser, device and screen-reader checks,** and against which preview URL.
+6. **Brand:** the lettering capitalisation and a higher-resolution logo. Not blocking.
+7. **The colour-template refinement** is deliberately **not** part of Phase 7. It will be a separate design pass, if approved.
 
 ## Missing information register
 
@@ -590,7 +703,7 @@ Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERI
 | 10 | Contact email, phone, registered address, CIN | **Email confirmed:** `focustriggerautomation@gmail.com` (general company contact, in `site.contact.email`). Phone, address and CIN are still `[REQUIRES COMPANY CONFIRMATION]` and remain `null`. A privacy or grievance contact (`site.contact.privacyEmail`) is also unconfirmed. | Phone and address optional; privacy contact is part of the policy review |
 | 11 | Contact form delivery method and endpoint | Not provided. The form is built and tested, but hidden until `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT` is set. Email is the working channel meanwhile. | Optional (no longer a blocker) |
 | 12 | Privacy Policy legal review; decision on Terms of Use | The policy is a **draft awaiting approval**; see Phase 5 → Privacy Policy. No Terms of Use page. | **Launch blocker** |
-| 13 | Production domain and hosting provider (`NEXT_PUBLIC_SITE_URL`) | Not provided. Canonical URLs fall back to `http://localhost:3000`. | Phase 7 |
+| 13 | Production domain and hosting provider (`NEXT_PUBLIC_SITE_URL`) | Not provided. The site is ready to use one (proven with the reserved test domain `https://www.example.com` in a temporary build); `npm run build:production` refuses to build without a real HTTPS domain. | **Launch blocker** |
 | 14 | Social profile URLs, if any should appear | Not provided. None are shown. | Optional |
 
 ## Decisions and notes

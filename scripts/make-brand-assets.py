@@ -85,7 +85,18 @@ square(180, 0.16).save(f"{OUT_APP}/apple-icon.png", optimize=True)
 square(256, 0.08).convert("RGBA").save(f"{OUT_APP}/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
 print(f"icon mark: {mw}x{mh}px source → icon.png 512, apple-icon.png 180, favicon.ico 16/32/48")
 
-# 6. Previews on white (header) and navy (footer) for visual inspection.
+# 6. Open Graph share image (1200×630): the unmodified cropped logo, scaled
+#    1.25× and centred on the logo's own background colour. No new artwork.
+og = Image.new("RGB", (1200, 630), tuple(int(c) for c in BG))
+logo_rgb = Image.fromarray(crop.astype(np.uint8), "RGB")
+scaled = logo_rgb.resize((round(W * 1.25), round(H * 1.25)), Image.LANCZOS)
+og.paste(scaled, ((1200 - scaled.width) // 2, (630 - scaled.height) // 2))
+og.save(f"{OUT_APP}/opengraph-image.png", optimize=True)
+with open(f"{OUT_APP}/opengraph-image.alt.txt", "w") as fh:
+    fh.write("FocusTrigger Automation logo")
+print(f"opengraph-image.png 1200x630 (logo {scaled.width}x{scaled.height} centred on its own background)")
+
+# 7. Previews on white (header) and navy (footer) for visual inspection.
 for name, colour in (("white", (255, 255, 255)), ("navy", (15, 23, 42))):
     bgimg = Image.new("RGBA", logo.size, colour + (255,))
     Image.alpha_composite(bgimg, logo).resize((W * 2, H * 2), Image.NEAREST).save(f"{PREVIEW}/preview-on-{name}.png")
