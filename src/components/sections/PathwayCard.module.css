@@ -1,0 +1,96 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface);
+  overflow: hidden;
+}
+
+/* Accent rule identifies the pillar without changing the shared structure. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background-color: var(--pillar-accent);
+}
+
+.product {
+  --pillar-accent: var(--color-accent);
+  --pillar-icon-bg: var(--color-accent-soft);
+  --pillar-icon: #0f766e;
+}
+
+.services {
+  --pillar-accent: var(--color-primary);
+  --pillar-icon-bg: var(--color-primary-soft);
+  --pillar-icon: var(--color-primary);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--pillar-icon-bg);
+  color: var(--pillar-icon);
+}
+
+.index {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.title {
+  font-size: var(--font-size-h3);
+}
+
+.description {
+  color: var(--color-text-secondary);
+}
+
+.audience {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-soft);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+}
+
+.audienceLabel {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: auto;
+  padding-top: var(--space-4);
+}

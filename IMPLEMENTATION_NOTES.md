@@ -7,8 +7,8 @@ These notes record what has been built, what was tested, and what must be confir
 | Phase | Scope | Status |
 | --- | --- | --- |
 | 0 | Repository audit and preparation | Complete. The repository was empty, so this is a new build. |
-| 1 | Design system and website foundation | Complete, awaiting review |
-| 2 | Homepage | Not started |
+| 1 | Design system and website foundation | Complete and approved (`fc5af0a`) |
+| 2 | Homepage | Complete, awaiting review |
 | 3 | Products and FocusTag | Not started |
 | 4 | Software Services | Not started |
 | 5 | About, Contact, Privacy Policy (Work only if real content exists) | Not started |
@@ -95,6 +95,69 @@ These notes record what has been built, what was tested, and what must be confir
 
   A full in-page audit is planned for Phase 6.
 - Screen-reader announcement behaviour, which needs a manual check with assistive technology.
+
+## Phase 2 — Homepage
+
+### Implemented
+- **Homepage copy** lives in `src/content/home.ts`, separate from the layout, so it can be edited without touching components.
+- **Section order:**
+  1. **Hero** (`Hero`, corporate variant):
+     - headline "Technology products we own. Software we build for clients."
+     - a lead sentence that names both pillars
+     - two buttons: Explore FocusTag → `/products/focustag`, and Discuss a project → `/contact?enquiry=software`
+     - an original SVG illustration captioned "Not a product screenshot"
+  2. **What we do:** two equal `PathwayCard`s.
+     - Proprietary products (teal accent) and Software solutions & services (blue accent).
+     - Each card has a description, a "Relevant for" audience note, and main and secondary links.
+  3. **FocusTag spotlight:**
+     - a plain-language description limited to NFC- and QR-enabled interactions
+     - a "Product direction" note that presents smart-campus productivity and spatial compliance as vision, not current capability
+     - `InteractionConcept`, a three-step tap/scan → identify → respond sequence, visibly labelled "Concept / illustrative"
+  4. **Services overview:**
+     - broad wording only; no specific service categories are named
+     - "Common starting points" are taken from the audiences listed in the specification
+  5. **How we work:** three principles instead of fake proof. There are no testimonials, logos, metrics or case studies.
+  6. **Closing call to action** (`CTASection`, dark): two routes, Ask about FocusTag → `/contact?enquiry=focustag` and Discuss a project → `/contact?enquiry=software`.
+  7. **Footer:** unchanged from Phase 1.
+- **New reusable components:**
+  - `src/components/ui/Eyebrow` (shared label above headings; `PageHeader` now uses it)
+  - `src/components/sections/SectionHeading`
+  - `src/components/sections/Hero`, with corporate, product and services variants
+  - `src/components/sections/PathwayCard`
+  - `src/components/sections/CTASection`
+  - `src/components/visuals/PillarsIllustration`
+  - `src/components/visuals/InteractionConcept`, reusable on the FocusTag page in Phase 3
+- **Dark sections:** `Section` with the dark tone now sets the label colour to teal (7.9:1) and the intro-text colour automatically.
+- **Unchanged routes:** `/products`, `/products/focustag`, `/services`, `/about`, `/contact` and `/privacy-policy` are still the Phase 1 placeholders and all work.
+- **Contact links:** links to `/contact?enquiry=focustag|software` are in place. Pre-selecting the enquiry type arrives with the form in Phase 5; until then the parameter is ignored.
+
+### Validation performed (Phase 2)
+- `npm run typecheck`: passed. `npm run lint`: passed, 0 problems. `npm run build`: passed, all routes static.
+- **Homepage Playwright suite** (production build): 57 passed, 0 failed.
+  - **Widths 320, 360, 375, 414, 768, 1024, 1280, 1440 and 1920px:** no sideways scrolling, no clipped text, and no console errors or failed requests.
+  - **Headings and landmarks:** one H1, no skipped heading levels, and every section is labelled by its heading.
+  - **Links:** every link in the page content returns 200. The homepage links to `/products/focustag`, `/services`, `/products` and both contact enquiry routes. FocusTag and Services are each one click from Home, tested by clicking through.
+  - **Equal pillars:** the two pathway cards render at the same size (584×479px at 1440px).
+  - **First screen:** the headline, lead and both hero buttons are visible without scrolling at 1440×900, 1024×768, 375×812 and 320×640.
+  - **Visuals:** all decorative SVGs are hidden from assistive technology, both illustrations have captions saying they are illustrative, and there are no images without alt text.
+  - **Contrast:** all 94 rendered text elements meet WCAG AA. The lowest is 4.56:1.
+  - **Keyboard:** Tab reaches all 26 tab stops in logical order. Each shows a focus ring and is scrolled into view, not hidden under the sticky header.
+  - **Content check:** no raw placeholders, "trusted by" wording, testimonials, number claims or banned superlatives in the visible text.
+- **Phase 1 regression suite:** 86 passed, 0 failed (navigation, mobile menu, keyboard, reduced motion, all routes at 5 widths).
+- **Defects found and fixed during testing:**
+  - The decorative "01/02" card numbers measured 1.48:1. They are now `--color-text-muted`.
+  - At 320×640 the second hero button sat exactly at the bottom of the screen. I trimmed the lead slightly and tightened the mobile top padding, and it now ends at 605px.
+
+### Known limitations
+- At very short screens such as 320×568 (iPhone SE, first generation), the second hero button falls below the first screen. It is reachable by scrolling.
+- Testing used Chromium only. Other browsers, real devices and screen readers are scheduled for Phase 6.
+
+### Homepage statements needing company confirmation
+These are written in safe, general language but should be confirmed before publication:
+- **How we work principles** (`approach` in `src/content/home.ts`): "Understand the context first", "Be clear about what exists", "Build in reviewable steps". `[REQUIRES COMPANY CONFIRMATION]`
+- **Audience notes and "Common starting points":** these come from the specification's list of key audiences. `[REQUIRES COMPANY CONFIRMATION]`
+- **"Ask about demonstrations, pilots…"** in the closing call to action: this assumes FocusTag demos or pilots can be discussed. It promises nothing, but confirm it. `[PRODUCT CAPABILITY TO BE VERIFIED]`
+- **The FocusTag concept steps** are a generic NFC/QR sequence, labelled as illustrative. Replace them with the confirmed FocusTag flow when it is available. `[PRODUCT CAPABILITY TO BE VERIFIED]`
 
 ## Missing information register
 

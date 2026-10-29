@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Container } from "./Container";
 import styles from "./PageHeader.module.css";
 
@@ -16,7 +17,7 @@ export function PageHeader({ title, eyebrow, lead, children }: PageHeaderProps) 
   return (
     <div className={styles.pageHeader}>
       <Container size="narrow" className={styles.inner}>
-        {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
+        {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
         <h1 className={styles.title}>{title}</h1>
         {lead && <div className={styles.lead}>{lead}</div>}
         {children && <div className={styles.actions}>{children}</div>}

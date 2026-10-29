@@ -9,14 +9,6 @@
   gap: var(--space-4);
 }
 
-.eyebrow {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--letter-spacing-eyebrow);
-  text-transform: uppercase;
-  color: var(--color-primary);
-}
-
 .title {
   font-size: var(--font-size-h1);
 }

@@ -15,6 +15,8 @@
 }
 
 .dark {
+  --eyebrow-color: var(--color-accent); /* 7.9:1 on the dark surface */
+  --lead-color: var(--color-dark-text-secondary);
   background-color: var(--color-dark-surface);
   color: var(--color-dark-text-secondary);
 }

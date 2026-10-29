@@ -1,0 +1,84 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(2rem, 0.75rem + 5vw, 5.5rem) var(--section-padding-y);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface-subtle);
+}
+
+/* A single restrained tint behind the visual; no decorative blobs. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60rem 30rem at 85% 0%, var(--hero-tint), transparent 70%);
+}
+
+.corporate {
+  --hero-tint: rgb(11 95 255 / 0.07);
+}
+
+.product {
+  --hero-tint: rgb(0 194 168 / 0.09);
+}
+
+.services {
+  --hero-tint: rgb(11 95 255 / 0.07);
+}
+
+.single,
+.withVisual {
+  position: relative;
+  display: grid;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.content {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 40rem;
+}
+
+.title {
+  font-size: var(--font-size-display);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  font-size: var(--font-size-body-lg);
+  color: var(--color-text-secondary);
+  max-width: 36rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.visual {
+  width: 100%;
+  max-width: 34rem;
+  justify-self: center;
+}
+
+@media (max-width: 479px) {
+  .actions > * {
+    flex: 1 1 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .withVisual {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: var(--space-16);
+  }
+
+  .visual {
+    justify-self: end;
+  }
+}
