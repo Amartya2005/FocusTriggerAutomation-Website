@@ -11,12 +11,13 @@
  */
 
 import { focustag, focustagContactHref } from "./focustag";
+import { softwareContactHref } from "./services";
 
 export type LinkAction = { label: string; href: string };
 
 export const contactLinks = {
   focustag: focustagContactHref,
-  software: "/contact?enquiry=software",
+  software: softwareContactHref,
 } as const;
 
 export const hero = {

@@ -9,8 +9,8 @@ These notes record what has been built, what was tested, and what must be confir
 | 0 | Repository audit and preparation | Complete. The repository was empty, so this is a new build. |
 | 1 | Design system and website foundation | Complete and approved (`fc5af0a`) |
 | 2 | Homepage | Complete and approved (`4df969c`, correction `0ac2172`) |
-| 3 | Products and FocusTag | Complete, awaiting review |
-| 4 | Software Services | Not started |
+| 3 | Products and FocusTag | Complete and approved (`c6f2395`) |
+| 4 | Software Services | Complete, awaiting review |
 | 5 | About, Contact, Privacy Policy (Work only if real content exists) | Not started |
 | 6 | Integration and quality assurance | Not started |
 | 7 | Launch readiness and handover | Not started |
@@ -246,6 +246,79 @@ These are written in safe, general language but should be confirmed before publi
 - **Further capability detail:** supported devices, operating systems, what the interaction exchanges or records, admin features, and any vision-area features. Add these only when confirmed. `[PRODUCT CAPABILITY TO BE VERIFIED]`
 - **Real product screenshots or diagrams** to replace or sit alongside the concept illustrations. `[APPROVED SCREENSHOT OR DIAGRAM NEEDED]`
 
+## Phase 4 — Software Solutions & Services
+
+### Implemented
+- **Content:** `src/content/services.ts` holds all `/services` copy. A comment at the top lists what is confirmed and what must not be published as an established offering.
+- **Shared enquiry link:** `softwareContactHref` (`/contact?enquiry=software`) lives in `services.ts`, and the homepage now uses it too. The homepage output is unchanged.
+- **Service areas are data-driven:** the page renders whatever `serviceAreas` contains. Each item has a title, a description and optional confirmed `examples`.
+  - Confirmed categories can be added, or can replace the broad areas, without changing the page.
+  - The grid adapts automatically: one column on mobile, and as many as fit at 18rem or wider on larger screens.
+  - At launch it holds only the two broad, confirmed areas: **Software solutions** and **Technology services**.
+- **`/services` sections:**
+  1. **Hero** (services style):
+     - heading "Turn your requirements into working software."
+     - an intro naming both pillars
+     - two buttons: **Discuss a project** (`/contact?enquiry=software`) and **How engagements begin** (jumps to `#how-engagements-begin`)
+     - an original illustration of requirements becoming software, captioned "Not a client project or product screenshot"
+  2. **Who we are:** positioning as one company with two pillars. A pillar list marks Software solutions & services as "This page" and links to `/products`.
+  3. **What we offer:** the `ServiceCard` grid, rendered from `serviceAreas`.
+  4. **Who we work with:** businesses, startups and partners, taken from the specification's audience list.
+  5. **Engineering experience:** evidence limited to FocusTrigger's own product, using the confirmed FocusTag summary and a link to the FocusTag page. No technology stack is claimed.
+  6. **How engagements begin:** `ProcessSteps`, three modest steps: share your requirement, discuss the context, agree the next step.
+  7. **FAQ:** three questions, answered without unconfirmed claims.
+  8. **Closing call to action:** one route, **Discuss a project** → `/contact?enquiry=software`.
+- **Contact:** the page has no form, and no wording suggests a message can already be sent. The contact page is still the Phase 1 placeholder, which says the enquiry form is being prepared. The form and pre-selecting the enquiry type are Phase 5.
+- **Not created:** separate service pages.
+- **New reusable components:**
+  - `src/components/sections/ServiceCard`
+  - `src/components/sections/ProcessSteps` (an ordered list; horizontal with connecting lines from 768px, vertical on mobile)
+  - `src/components/visuals/ServicesIllustration`
+
+### Validation performed (Phase 4)
+- `npm run typecheck`: passed. `npm run lint`: passed, 0 problems. `npm run build`: passed, all routes static.
+- **Phase 4 Playwright suite** (production build, `/services`): 57 passed, 0 failed.
+  - **Widths 320, 375, 414, 768, 1024, 1280, 1440 and 1920px:** no sideways scrolling, clipped text, console errors or failed requests.
+  - **Structure and metadata:** one H1, no skipped heading levels, and every section labelled by its heading. The title and description are unique across the site, and the canonical URL and Open Graph title are present. Services is active in the header and marked as the current page.
+  - **Links:** every link returns 200, and both in-page jumps have targets.
+  - **Project enquiry:** both "Discuss a project" buttons, including the hero's main one, go to `/contact?enquiry=software`.
+    - The services page has no form or input fields.
+    - Clicking through lands on `/contact?enquiry=software`. That page offers no way to send a message and claims nothing was sent or received.
+  - **"How engagements begin":** the button jumps to the section, with the heading below the sticky header (heading top at 215px, header bottom at 73px).
+  - **Positioning:** the section links to the products pillar.
+  - **Service grid:** it shows exactly the content entries, Software solutions and Technology services. At 1440px it renders 2 × 584px cards; the empty third column collapses to 0px. It is one column at 375px.
+  - **Engagement steps:** they render as a three-item ordered list.
+  - **Engineering evidence:** it contains only the confirmed FocusTag model.
+  - **Content check:** none of the following appear in the visible text or illustration labels:
+    - research-derived categories: web/mobile apps, MVP, cloud, AI/ML, IoT, integrations, backend, DevOps
+    - named technologies or frameworks, or delivery methods such as agile, scrum or sprints
+    - certifications, years of experience, client names, case studies, testimonials or percentages
+    - guarantees, SLAs or "on time" promises
+    - superlatives, tag or printed-code wording, or placeholders
+  - **Visuals:** decorative graphics are hidden from screen readers, and the caption states it is an illustration, not a client project or screenshot.
+  - **FAQ:** opens with Enter and closes with Space.
+  - **Contrast:** WCAG AA met for all 86 text elements with FAQ answers expanded. The lowest is 4.56:1.
+  - **Keyboard:** a focus ring on all 22 tab stops, and each is visible and drawn on top.
+  - **First screen:** the heading and Discuss a project button are visible without scrolling at 1440×900, 1024×768, 375×812 and 320×640.
+- **Regression suites:**
+  - Phase 3 (product pages): 97 passed, 0 failed.
+  - Homepage: 63 passed, 0 failed.
+  - Phase 1: 86 passed, 0 failed.
+- **Problems found and fixed:** the hero illustration had empty space at the bottom and duplicate labels. I removed the duplicate labels and reduced the drawing height from 400 to 360.
+
+### Known limitations
+- `?enquiry=software` is not read until the contact form is built in Phase 5.
+- No Service structured data, because the specific offerings are not confirmed.
+- Testing used Chromium only. Other browsers, real devices and screen readers are scheduled for Phase 6.
+
+### Services-page statements needing company confirmation
+- **Service areas:** only "Software solutions" and "Technology services" are shown, with their one-line descriptions. Please supply 3–5 confirmed categories, with optional examples. `[REQUIRES COMPANY CONFIRMATION]`
+- **Who we work with:** businesses, startups and partners, as listed in the specification's audiences. `[REQUIRES COMPANY CONFIRMATION]`
+- **How engagements begin:** share your requirement → discuss the context → agree the next step, before work begins. `[REQUIRES COMPANY CONFIRMATION]`
+- **Engineering experience:** describes building FocusTag as direct, first-hand engineering experience. Confirm the wording, and supply any technologies or capabilities to list. `[REQUIRES COMPANY CONFIRMATION]`
+- **FAQ answers:** "Can startups discuss an early product idea? — Yes…", and that FocusTag is separate from client projects. `[REQUIRES COMPANY CONFIRMATION]`
+- **Case studies:** none are published. `[REAL CLIENT CASE STUDY NEEDED]`
+
 ## Missing information register
 
 Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERIFIED]`, `[REAL CLIENT CASE STUDY NEEDED]`, `[APPROVED SCREENSHOT OR DIAGRAM NEEDED]`.
@@ -256,9 +329,9 @@ Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERI
 | 2 | FocusTag capabilities that work today | **Confirmed:** phone-to-phone NFC interaction with QR fallback. Anything further is `[PRODUCT CAPABILITY TO BE VERIFIED]`. | Phase 3 |
 | 3 | FocusTag roadmap / planned features | Only the vision themes are published: smart-campus productivity and spatial compliance. Any specific planned features, timelines or workflows are `[PRODUCT CAPABILITY TO BE VERIFIED]`. | Before publication |
 | 4 | FocusTag screenshots, product photos or diagrams | `[APPROVED SCREENSHOT OR DIAGRAM NEEDED]`. Original illustrations labelled as concepts are used meanwhile. | Before publication |
-| 5 | Software service categories (3–5) | `[REQUIRES COMPANY CONFIRMATION]` | Phases 2 and 4 |
-| 6 | Technology stack or expertise to list publicly | `[REQUIRES COMPANY CONFIRMATION]` | Phase 4 |
-| 7 | Delivery process actually followed | `[REQUIRES COMPANY CONFIRMATION]` | Phase 4 |
+| 5 | Software service categories (3–5) | `[REQUIRES COMPANY CONFIRMATION]`. `/services` shows only two broad areas (Software solutions, Technology services). Add confirmed categories to `serviceAreas` in `src/content/services.ts`. | Before publication |
+| 6 | Technology stack or expertise to list publicly | `[REQUIRES COMPANY CONFIRMATION]`. No technologies are listed. The engineering section cites only the confirmed FocusTag model. | Before publication |
+| 7 | Delivery process actually followed | `[REQUIRES COMPANY CONFIRMATION]`. `/services` shows a modest three-step "How engagements begin" outline, and no methodology, timelines or guarantees. | Before publication |
 | 8 | Approved public projects or case studies | `[REAL CLIENT CASE STUDY NEEDED]`. `/work` is deferred. | Phase 5 |
 | 9 | Company description, founding details, location, team | `[REQUIRES COMPANY CONFIRMATION]` | Phase 5 |
 | 10 | Contact email, phone, registered address, CIN | `[REQUIRES COMPANY CONFIRMATION]`. All are `null` in `src/lib/site.ts`. | Phase 5 |
