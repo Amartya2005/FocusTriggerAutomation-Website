@@ -7,9 +7,11 @@ import { site } from "@/lib/site";
 /*
  * DRAFT — awaiting company and legal review (see IMPLEMENTATION_NOTES.md →
  * Phase 5 → Privacy Policy). Every statement describes behaviour verified in
- * this codebase and its production build. The enquiry-form and contact
- * sections follow site.contact, so enabling the form or publishing an email
- * changes this page — and requires the policy to be reviewed again.
+ * this codebase and its production build. The enquiry-form, email and
+ * contact sections follow site.contact, so enabling the form or setting a
+ * privacy contact changes this page — and requires the policy to be reviewed
+ * again. The general company email is deliberately NOT used as the privacy
+ * contact (site.contact.privacyEmail must be confirmed separately).
  */
 
 export const metadata = pageMetadata({
@@ -20,7 +22,9 @@ export const metadata = pageMetadata({
 
 export default function PrivacyPolicyPage() {
   const formEnabled = Boolean(site.contact.formEndpoint);
-  const privacyEmail = site.contact.email;
+  const companyEmail = site.contact.email;
+  // Only a separately confirmed privacy contact is listed; the general company address is not assumed to be one.
+  const privacyEmail = site.contact.privacyEmail;
 
   return (
     <>
@@ -56,6 +60,12 @@ export default function PrivacyPolicyPage() {
             <p>
               This website does not currently offer a contact form or any other way to submit personal information
               through the site.
+            </p>
+          )}
+          {companyEmail && (
+            <p>
+              If you email {site.name} at the address shown on this website, your message is sent by your own email
+              provider to {site.name}’s email account. It does not pass through this website.
             </p>
           )}
 

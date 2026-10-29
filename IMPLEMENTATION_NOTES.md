@@ -11,8 +11,8 @@ These notes record what has been built, what was tested, and what must be confir
 | 2 | Homepage | Complete and approved (`4df969c`, correction `0ac2172`) |
 | 3 | Products and FocusTag | Complete and approved (`c6f2395`) |
 | 4 | Software Services | Complete and approved (`aa361ba`) |
-| 5 | About, Contact, Privacy Policy (Work only if real content exists) | Complete, awaiting review. The Privacy Policy is a **draft awaiting company and legal approval**. |
-| 6 | Integration and quality assurance | Not started |
+| 5 | About, Contact, Privacy Policy (Work only if real content exists) | Complete and approved (`e09bd51`). The Privacy Policy is still a **draft awaiting company and legal approval**. |
+| 6 | Integration and quality assurance (plus official logo and confirmed email) | Complete, awaiting review |
 | 7 | Launch readiness and handover | Not started |
 
 ## Phase 1 — Foundation
@@ -424,7 +424,7 @@ Items needing company or legal review before publication:
 - Whether a Terms of Use page is needed.
 - Review again whenever analytics, cookies, embeds, external fonts or the contact form change.
 
-### Launch blockers (as of Phase 5)
+### Launch blockers (as of Phase 5 — superseded by Phase 6 below)
 1. **No public contact channel.** `/contact` honestly says online enquiries are not open, but visitors have no way to reach the company. You need to provide one or both of these:
    - a form-processing endpoint (a public JSON POST URL, without a secret key), or a decision to approve a server-side handler;
    - a confirmed email address and/or phone number.
@@ -433,13 +433,152 @@ Items needing company or legal review before publication:
 4. **No approved logo or favicon.**
 5. **Spam protection** (for example, a honeypot, rate limiting or a CAPTCHA via the provider) needs deciding once a form service is chosen. None is built now, because a fake "success" shown to bots would conflict with the rule that the form never claims delivery falsely.
 
+## Phase 6 — Integration and quality assurance
+
+### Branding: official logo
+- **Source:** the company-supplied 1024×1024 PNG.
+  - It has an opaque cream background (#F9EAD8, varying by ±2).
+  - Its lettering reads "Focustrigger Automation".
+  - The artwork occupies x 192–834, y 427–596.
+- **Processing** (`scripts/make-brand-assets.py`; the artwork is not redrawn, recoloured or recreated):
+  - Cropped to the content plus 8 px.
+  - **Background removal:** the cream connected to the outer edge, and the letter counters inside the lettering, are made transparent. Anti-aliased edges are un-blended against the background, so no halo is left.
+  - **Kept intact:** the cream fills inside the icon (the light half of each toggle) are part of the design. They and every other icon pixel are byte-identical to the source (29,288 pixels verified).
+  - **Check:** recompositing the result over the original background reproduces the source with a mean error of 1.1/255.
+- **Files:**
+  - `public/brand/focustrigger-automation-logo.png`: 659×186, transparent background, 52 KB.
+  - `assets/brand/focustrigger-automation-logo-cropped-original.png`: the untouched crop, kept as the source of truth and not served.
+  - `src/app/favicon.ico` (16/32/48, RGBA), `src/app/icon.png` (512) and `src/app/apple-icon.png` (180): the icon mark only, centred on the logo's own cream background. No new artwork was created.
+- **Header:**
+  - The logo is 44 px tall from 768 px and 36 px on mobile, keeping its aspect ratio.
+  - It loads eagerly and is preloaded.
+  - The link is named "FocusTrigger Automation — home"; the image alt text is "FocusTrigger Automation".
+- **Footer:** the logo sits on a tile in the logo's own cream colour (`--color-brand-cream`), because its black lettering would be illegible on the navy footer. It is not recoloured.
+- **Rendering:** a `Logo` component (`src/components/ui/Logo.tsx`) uses `next/image` with `unoptimized`. The PNG is served as-is, so no image-optimisation server is needed on whichever host is chosen.
+
+### Confirmed company email
+- **One place to change it:** `site.contact.email = "focustriggerautomation@gmail.com"` in `src/lib/site.ts`. No other file hard-codes the address.
+- **Footer (every page):** an "Email / focustriggerautomation@gmail.com" `mailto:` link.
+- **Contact page:**
+  - The hero now has **Email FocusTrigger** (`mailto:` with subject "Website enquiry") and a "Choose an enquiry type" button.
+  - The main panel is headed **Email FocusTrigger**. It explains that the online enquiry form is not available yet and that this page cannot send messages itself.
+  - It shows the address as a visible link, plus **Write an email**, whose `mailto:` subject names the selected type (for example "Enquiry: Software project").
+  - A note says the email app is the visitor's own and the message does not go through this website.
+  - Guidance on what to include stays.
+- **Removed:** the earlier "Online enquiries are not open yet / No information can be submitted" message. It is now only a fallback for when no email is configured.
+- **Configured form (if an endpoint is set later):** a "Prefer email? Write to …" line appears under the form.
+- **Not added:** a phone number, address or CIN.
+- **Privacy contact:** the general email is **not** labelled or used as a privacy or grievance contact. That is `site.contact.privacyEmail`, which stays `null`.
+
+### Privacy Policy (still DRAFT, awaiting company and legal approval)
+- Re-checked against runtime behaviour after the logo and email changes. Both new resources are served from the site's own origin.
+- **Added sentence:** "If you email FocusTrigger at the address shown on this website, your message is sent by your own email provider to FocusTrigger's email account. It does not pass through this website."
+- **Unchanged:**
+  - It still says no website form collects data, because the form is disabled.
+  - It still has no Contact section, because the privacy contact is unconfirmed.
+  - It still makes no claims about retention, legal basis, security, sharing or compliance.
+
+### SEO additions
+- `src/app/robots.ts` → `/robots.txt`: allows all, and references the sitemap.
+- `src/app/sitemap.ts` → `/sitemap.xml`: lists the 7 public routes.
+- **Organization JSON-LD in the root layout:** legal name, short name, URL, logo and confirmed email only. No address, phone, founding date or social profiles.
+- **Note:** the canonical URLs, sitemap, robots and JSON-LD all use `NEXT_PUBLIC_SITE_URL`, which falls back to `http://localhost:3000` until the production domain is set (Phase 7).
+
+### Defects found and fixed in Phase 6
+1. **Favicon `.ico` in RGB:** Next's build rejected it ("PNG is not in RGBA format"). I regenerated it as RGBA with the same pixels.
+2. **Logo legibility:** each line of lettering was about 15 px tall at a 40 px logo, so I raised the logo to 44 px on desktop and 36 px on mobile.
+3. **Mobile Contact journey:** the email channel sat below four enquiry cards on phones, so I added the "Email FocusTrigger" button to the Contact hero, which shows on the first screen.
+4. **Focus ring clipped at the viewport bottom:** when Tab focus scrolled the footer email to the bottom edge, the ring was cut off (bottom 900.36 vs viewport 900). I added `scroll-padding-bottom` alongside the existing `scroll-padding-top`.
+
+### Tests actually executed (all Chromium via Playwright; production build)
+| Suite | Result |
+|---|---|
+| `npm run typecheck` | Passed |
+| `npm run lint` | Passed (0 problems) |
+| `npm run build` (clean `.next`, no form endpoint) | Passed. All routes are static, plus `/robots.txt`, `/sitemap.xml`, `/icon.png` and `/apple-icon.png`. Checked: no test endpoint in the build. |
+| **Phase 6 whole-site suite** | **134 passed, 0 failed**, three consecutive runs on the final build |
+| Phase 5 suite (About, Contact, Privacy) | 177 passed, 0 failed |
+| Phase 5 contact-form suite (temporary mock-endpoint build, not committed) | 28 passed, 0 failed, plus the configured-mode email and privacy check |
+| Phase 4 (Services) | 57 passed, 0 failed |
+| Phase 3 (Products, FocusTag) | 97 passed, 0 failed |
+| Phase 2 (Homepage) | 63 passed, 0 failed |
+| Phase 1 (Foundation) | 88 passed, 0 failed |
+
+**What the Phase 6 suite covers:**
+- **Layout:** all 7 routes at 10 widths (320, 360, 375, 414, 768, 834, 1024, 1280, 1440, 1920), 70 combinations with no failures. Checked: horizontal overflow, clipped text, broken images, console errors, failed requests and third-party requests.
+- **Per page:** title, description, og:title, `lang`, canonical URL, a single H1 with no skipped levels, landmarks and labelled sections. Every link and button has an accessible name. WCAG AA text contrast passes, with the lowest ratio 4.56:1.
+- **Brand and contact on every page:**
+  - header logo loaded, 44 px tall, undistorted (ratio 3.54 ≈ 659/186), with alt text, the home link name, eager loading and a preload
+  - footer logo loaded, with alt text
+  - favicon, icon and apple-touch-icon linked
+  - footer `mailto:` uses the confirmed email, and every `mailto:` on the site uses it; no `tel:` links
+  - titles and descriptions unique across the site
+- **Links and files:** every internal link (crawled) and asset returns 200. Unknown routes return 404. Icons are served as images.
+- **Search files:** robots, the sitemap (exactly the 7 routes) and the JSON-LD (confirmed fields only) were validated.
+- **FocusTag wording on every route:**
+  - no wording about tags, printed codes, locations or unconfirmed features
+  - "phone-to-phone NFC … QR … fallback" appears on Home, Products, FocusTag, About and Services
+  - "smart-campus productivity" and "spatial compliance" appear only in labelled vision or direction contexts, never under "Available now"
+- **Contact:**
+  - The `mailto:` subject is right for no type, each of the four types and an invalid type.
+  - No form controls appear while the form is disabled.
+  - The page says the form is unavailable and directs visitors to email.
+  - None of the old "no way to contact" wording remains.
+  - No delivery, response or "secure form" claims.
+  - The email is described as going via the visitor's own provider.
+  - The email is not described as a privacy contact.
+  - A `mailto:` link is reachable by keyboard.
+- **Privacy:** no claims about form data; the email sentence is present; the email is not a privacy contact; no invented retention, legal-basis or compliance claims.
+- **Runtime privacy check:** across all pages plus in-site navigation, no cookies, Set-Cookie headers or browser storage, and **all 221 requests stay on the site's own origin**, including the logo, icons and fonts.
+- **Keyboard:** on every page, Tab reaches the end of the footer, with the focus ring visible and unobscured at every stop.
+- **Emulated iPhone 13 (Chromium with touch):** header logo 36 px; Menu → FocusTag works by tap; no overflow.
+- **JavaScript disabled:** all 7 routes still render their content, footer and email link. `/contact` still offers the email channel through its static fallback. Without JavaScript, the enquiry-type preselection and the mobile menu don't work; the footer links remain.
+
+**Secrets and repository hygiene** (shell scan):
+- `.env*` files are ignored except `.env.example`.
+- No key, token or private-key patterns in tracked files, git history or the client bundle.
+- The bundle mentions only the *names* `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT`, as inert lookups with fallbacks. No values are embedded.
+- `process.env` is used only in `src/lib/site.ts`.
+
+**Test-script corrections** (the website itself was correct in each case):
+- Earlier crawlers tried to fetch `mailto:` as a page.
+- Some checks read `innerText` inside closed `<details>`.
+- Next 16 implements `priority` as a preload link rather than `fetchpriority`.
+- The lazy-loaded footer logo was checked before it scrolled into view; this was confirmed stable over three runs.
+- Phase 5 assertions written before the email existed ("no email anywhere", "cannot submit") were updated to the approved state: only the confirmed email is allowed. Every phone, address, CIN, history and credential guard is unchanged.
+
+### Not verified (not run in this environment)
+- **Firefox and Safari/WebKit:** not run. Only Chromium is installed, and installing other Playwright browsers isn't permitted here. iPhone emulation uses Chromium, not WebKit.
+- **Real devices:** physical phones and tablets.
+- **Screen readers:** NVDA, JAWS, VoiceOver and TalkBack.
+- **Email client:** that clicking `mailto:` opens a real email client and pre-fills the subject. That depends on the visitor's operating system; only the link markup was verified.
+- **Performance audits:** Lighthouse and Core Web Vitals; no tool is installed.
+- **Production hosting:** domain, HTTPS, headers and CDN behaviour.
+
+### Decisions needed from the company
+1. **Logo lettering:** the official artwork reads "Focustrigger" (lowercase "t"), while the site's text uses "FocusTrigger". The artwork is preserved exactly. Please confirm which capitalisation is correct; the text can be aligned, or a corrected logo supplied.
+2. **Higher-resolution or vector logo (SVG):** the icon mark in the supplied file is only about 184 px, so the 512 px app icon is slightly soft.
+3. **Privacy or grievance contact:** should `focustriggerautomation@gmail.com` also serve as the privacy contact, or will a separate one be designated?
+4. **Contact form:** keep email only, or provide a form-processing endpoint?
+
+### Launch blockers (as of Phase 6)
+1. **The Privacy Policy is a draft** awaiting company and legal approval (see Phase 5 → Privacy Policy). This includes designating a privacy or grievance contact, or confirming that the general email serves that role.
+2. **No production domain or hosting** (`NEXT_PUBLIC_SITE_URL`), so canonical URLs, the sitemap, robots and JSON-LD point to localhost. Phase 7.
+3. **No cross-browser and assistive-technology verification:** Firefox, Safari/WebKit, real devices and screen readers have not been tested (see "Not verified").
+
+Resolved in Phase 6:
+- **No public contact channel:** the confirmed email is now live in the footer and on the Contact page.
+- **No approved logo or favicon:** the official logo and icons are integrated.
+
+Spam protection is only relevant if a form endpoint is added later.
+
 ## Missing information register
 
 Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERIFIED]`, `[REAL CLIENT CASE STUDY NEEDED]`, `[APPROVED SCREENSHOT OR DIAGRAM NEEDED]`.
 
 | # | Item | Status | Needed by |
 | --- | --- | --- | --- |
-| 1 | Approved logo and favicon | `[REQUIRES COMPANY CONFIRMATION]`. A text wordmark "FocusTrigger" is used; there is no favicon yet. | Phase 7, ideally earlier |
+| 1 | Approved logo and favicon | **Done (Phase 6).** The official logo is in the header and footer; the favicon and app icons are cut from its icon mark. Open: a higher-resolution or vector original, and a decision on the "Focustrigger" lettering (see Phase 6 → Decisions). | Optional |
 | 2 | FocusTag capabilities that work today | **Confirmed:** phone-to-phone NFC interaction with QR fallback. Anything further is `[PRODUCT CAPABILITY TO BE VERIFIED]`. | Phase 3 |
 | 3 | FocusTag roadmap / planned features | Only the vision themes are published: smart-campus productivity and spatial compliance. Any specific planned features, timelines or workflows are `[PRODUCT CAPABILITY TO BE VERIFIED]`. | Before publication |
 | 4 | FocusTag screenshots, product photos or diagrams | `[APPROVED SCREENSHOT OR DIAGRAM NEEDED]`. Original illustrations labelled as concepts are used meanwhile. | Before publication |
@@ -448,8 +587,8 @@ Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERI
 | 7 | Delivery process actually followed | `[REQUIRES COMPANY CONFIRMATION]`. `/services` shows a modest three-step "How engagements begin" outline, and no methodology, timelines or guarantees. | Before publication |
 | 8 | Approved public projects or case studies | `[REAL CLIENT CASE STUDY NEEDED]`. `/work` is not built and has no navigation link; it returns 404. | Before any Work page |
 | 9 | Company description, founding details, location, team | `[REQUIRES COMPANY CONFIRMATION]`. `/about` uses only the legal name, the two pillars and confirmed FocusTag facts. | Optional for launch |
-| 10 | Contact email, phone, registered address, CIN | `[REQUIRES COMPANY CONFIRMATION]`. All are `null` in `src/lib/site.ts`. Once set, they appear automatically in the footer and in an "Other ways to reach us" section on `/contact`; the email also appears as the Privacy Policy contact. | **Launch blocker** |
-| 11 | Contact form delivery method and endpoint | Not provided. The form is built and tested, but hidden until `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT` is set. | **Launch blocker** |
+| 10 | Contact email, phone, registered address, CIN | **Email confirmed:** `focustriggerautomation@gmail.com` (general company contact, in `site.contact.email`). Phone, address and CIN are still `[REQUIRES COMPANY CONFIRMATION]` and remain `null`. A privacy or grievance contact (`site.contact.privacyEmail`) is also unconfirmed. | Phone and address optional; privacy contact is part of the policy review |
+| 11 | Contact form delivery method and endpoint | Not provided. The form is built and tested, but hidden until `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT` is set. Email is the working channel meanwhile. | Optional (no longer a blocker) |
 | 12 | Privacy Policy legal review; decision on Terms of Use | The policy is a **draft awaiting approval**; see Phase 5 → Privacy Policy. No Terms of Use page. | **Launch blocker** |
 | 13 | Production domain and hosting provider (`NEXT_PUBLIC_SITE_URL`) | Not provided. Canonical URLs fall back to `http://localhost:3000`. | Phase 7 |
 | 14 | Social profile URLs, if any should appear | Not provided. None are shown. | Optional |

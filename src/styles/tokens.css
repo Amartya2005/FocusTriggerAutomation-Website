@@ -16,6 +16,9 @@
   --color-accent: #00c2a8; /* small accents/diagrams only — never body text on white */
   --color-accent-soft: #e0f8f4;
 
+  /* ---- Colour: logo artwork ---- */
+  --color-brand-cream: #f9ead8; /* measured background of the supplied logo */
+
   /* ---- Colour: neutrals ---- */
   --color-text: #0f172a; /* main text, dark surfaces */
   --color-text-secondary: #334155;

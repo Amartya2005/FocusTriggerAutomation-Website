@@ -2,7 +2,8 @@ import { Suspense } from "react";
 import { Section } from "@/components/layout/Section";
 import { ContactEnquiry, ContactEnquiryView } from "@/components/contact/ContactEnquiry";
 import { Hero } from "@/components/sections/Hero";
-import { contactPage } from "@/content/contact";
+import { Button } from "@/components/ui/Button";
+import { contactPage, enquiryMailto } from "@/content/contact";
 import { pageMetadata } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import styles from "./page.module.css";
@@ -15,12 +16,29 @@ export const metadata = pageMetadata({
 });
 
 export default function ContactPage() {
+  // Email is offered in the enquiry panel; phone and address appear here only once confirmed.
   const { email, phone, address } = site.contact;
-  const hasDirectDetails = Boolean(email || phone || address);
+  const hasDirectDetails = Boolean(phone || address);
 
   return (
     <>
-      <Hero eyebrow={contactPage.hero.eyebrow} title={contactPage.hero.title} lead={contactPage.hero.lead} />
+      <Hero
+        eyebrow={contactPage.hero.eyebrow}
+        title={contactPage.hero.title}
+        lead={contactPage.hero.lead}
+        actions={
+          email ? (
+            <>
+              <Button href={enquiryMailto(email, null)} size="lg">
+                Email FocusTrigger
+              </Button>
+              <Button href="#enquiry" variant="secondary" size="lg">
+                Choose an enquiry type
+              </Button>
+            </>
+          ) : undefined
+        }
+      />
 
       <Section id="enquiry" labelledBy="enquiry-types-title">
         {/* useSearchParams needs a Suspense boundary for static rendering; the fallback is the same view with no type selected. */}
@@ -29,21 +47,13 @@ export default function ContactPage() {
         </Suspense>
       </Section>
 
-      {/* Direct details appear only once the company confirms them in site.contact. */}
+      {/* Phone and address appear only once the company confirms them in site.contact. */}
       {hasDirectDetails && (
         <Section id="direct-contact" tone="soft" spacing="compact" labelledBy="direct-contact-title">
           <h2 id="direct-contact-title" className={styles.directTitle}>
             Other ways to reach us
           </h2>
           <dl className={styles.details}>
-            {email && (
-              <div>
-                <dt>Email</dt>
-                <dd>
-                  <a href={`mailto:${email}`}>{email}</a>
-                </dd>
-              </div>
-            )}
             {phone && (
               <div>
                 <dt>Phone</dt>

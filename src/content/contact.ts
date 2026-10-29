@@ -51,13 +51,28 @@ export const contactPage = {
   },
   types: {
     title: "Choose an enquiry type",
-    lead: "Selecting a type helps your enquiry reach the right part of the company.",
+    lead: "Choosing a type labels your enquiry, so it reaches the right part of the company, and shows what to include.",
   },
   form: {
     title: "Send an enquiry",
+    emailAlternative: "Prefer email? Write to",
   },
+  /** Fallback if neither a form endpoint nor an email address is configured. */
   unavailable: {
     title: "Online enquiries are not open yet",
     text: "The enquiry form will be available on this page soon. No information can be submitted here at the moment.",
   },
+  /** Shown while no form endpoint is configured: email is the contact channel. */
+  email: {
+    title: "Email FocusTrigger",
+    text: "Contact FocusTrigger by email. The online enquiry form is not available yet, so this page cannot send messages itself.",
+    actionLabel: "Write an email",
+    note: "“Write an email” opens your own email app. Your message is sent by your email provider, not through this website.",
+  },
 };
+
+/** mailto: link with a subject line naming the selected enquiry type. */
+export function enquiryMailto(email: string, typeLabel: string | null) {
+  const subject = typeLabel ? `Enquiry: ${typeLabel}` : "Website enquiry";
+  return `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+}

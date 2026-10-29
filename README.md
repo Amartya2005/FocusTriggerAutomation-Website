@@ -42,6 +42,18 @@ Copy `.env.example` to `.env.local` and set:
 
 Both are read at build time, so rebuild after changing them.
 
+## Company details and branding
+
+- **Company details:** these live in `src/lib/site.ts` and nowhere else.
+  - `contact.email` is the confirmed general company address, `focustriggerautomation@gmail.com`. It appears in the footer and on the Contact page.
+  - `contact.phone`, `contact.address` and `contact.privacyEmail` stay `null` until confirmed. The general email is **not** used as a privacy or grievance contact.
+- **Official logo:**
+  - The web version is `public/brand/focustrigger-automation-logo.png`. Only the background was removed; the artwork is unchanged.
+  - The untouched cropped original is `assets/brand/focustrigger-automation-logo-cropped-original.png`.
+  - The favicon and app icons (`src/app/favicon.ico`, `icon.png`, `apple-icon.png`) are cut from the logo's icon mark and sit on the logo's own cream background.
+  - `scripts/make-brand-assets.py` (Python 3 with Pillow and NumPy) regenerates all of these from the supplied artwork.
+- **Search files:** `robots.txt` and `sitemap.xml` are generated from `src/app/robots.ts` and `src/app/sitemap.ts`. The root layout includes Organization structured data, using confirmed facts only.
+
 ## Project structure
 
 ```
@@ -51,7 +63,7 @@ src/
     contact/           ContactEnquiry (enquiry-type chooser) and ContactForm
     layout/            Container, Section, PageHeader, Prose, SiteHeader, SiteFooter
     sections/          Hero, SectionHeading, PathwayCard, ProductCard, CapabilityComparison, ServiceCard, ProcessSteps, PrincipleList, FaqList, CTASection
-    ui/                Button, Eyebrow, Breadcrumbs and other primitives
+    ui/                Button, Eyebrow, Breadcrumbs, Logo and other primitives
     visuals/           Original illustrations and concept diagrams (labelled as illustrative)
   content/             Page copy, confirmed product facts (focustag.ts) and service areas (services.ts), kept separate from layout
   lib/
@@ -60,6 +72,9 @@ src/
   styles/
     tokens.css         Design tokens (colour, type, spacing, radius, motion)
     globals.css        Reset, base typography, focus and reduced-motion rules
+public/brand/          Web logo asset
+assets/brand/          Unmodified cropped original logo (source of truth, not served)
+scripts/               Dev-only tooling (brand asset derivation)
 ```
 
 ## Content rules

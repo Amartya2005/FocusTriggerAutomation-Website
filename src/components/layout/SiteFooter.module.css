@@ -25,16 +25,12 @@
   justify-self: start;
   display: inline-flex;
   align-items: center;
-  min-height: var(--tap-target);
-  font-size: 1.25rem;
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-dark-text);
-  text-decoration: none;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-md);
 }
 
-.wordmark:hover {
-  color: var(--color-dark-link-hover);
+.wordmark:focus-visible {
+  border-radius: var(--radius-md);
 }
 
 .legalName {
@@ -53,8 +49,34 @@
   font-style: normal;
 }
 
-.contact a {
+.contactLink {
+  display: inline-grid;
+  gap: 0.125rem;
+  justify-self: start;
+  min-height: var(--tap-target);
+  padding-block: var(--space-1);
   color: var(--color-dark-text);
+  text-decoration: none;
+}
+
+.contactLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-dark-text-muted);
+}
+
+.contactValue {
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: var(--color-dark-text-muted);
+  text-underline-offset: 0.2em;
+}
+
+.contactLink:hover .contactValue {
+  color: var(--color-dark-link-hover);
+  text-decoration-color: currentColor;
 }
 
 .groups {

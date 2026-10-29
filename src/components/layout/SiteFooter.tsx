@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import { footerGroups, site } from "@/lib/site";
 import { Container } from "./Container";
 import styles from "./SiteFooter.module.css";
@@ -13,8 +14,8 @@ export function SiteFooter() {
       <Container>
         <div className={styles.top}>
           <div className={styles.brand}>
-            <Link href="/" className={styles.wordmark}>
-              {site.name}
+            <Link href="/" className={styles.wordmark} aria-label={`${site.logo.alt} — home`}>
+              <Logo height={44} onDark />
             </Link>
             <p className={styles.legalName}>{site.legalName}</p>
             <p className={styles.summary}>
@@ -23,7 +24,12 @@ export function SiteFooter() {
 
             {hasContactDetails && (
               <address className={styles.contact}>
-                {email && <a href={`mailto:${email}`}>{email}</a>}
+                {email && (
+                  <a href={`mailto:${email}`} className={styles.contactLink}>
+                    <span className={styles.contactLabel}>Email</span>
+                    <span className={styles.contactValue}>{email}</span>
+                  </a>
+                )}
                 {phone && <a href={`tel:${phone.replace(/\s+/g, "")}`}>{phone}</a>}
                 {address && <span>{address}</span>}
               </address>

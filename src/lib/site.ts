@@ -29,10 +29,20 @@ export const site = {
   /** Canonical origin; set NEXT_PUBLIC_SITE_URL in each deployment environment. */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   locale: "en_IN",
+  /** Official logo supplied by the company (background removed; artwork unchanged). */
+  logo: {
+    src: "/brand/focustrigger-automation-logo.png",
+    width: 659,
+    height: 186,
+    alt: "FocusTrigger Automation",
+  },
   contact: {
-    email: null as string | null, // [REQUIRES COMPANY CONFIRMATION]
+    /** Confirmed general company contact address (not a designated privacy/grievance contact). */
+    email: "focustriggerautomation@gmail.com" as string | null,
     phone: null as string | null, // [REQUIRES COMPANY CONFIRMATION]
     address: null as string | null, // [REQUIRES COMPANY CONFIRMATION]
+    /** Designated privacy/grievance contact — only set once separately confirmed. */
+    privacyEmail: null as string | null, // [REQUIRES COMPANY CONFIRMATION]
     /**
      * Public URL that accepts enquiry-form POSTs (JSON). The contact form is
      * only rendered when this is set; it must not embed a secret key.

@@ -14,7 +14,9 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Keep focused/targeted elements (and their focus rings) clear of the sticky header and the viewport bottom. */
   scroll-padding-top: calc(var(--header-height) + var(--space-4));
+  scroll-padding-bottom: var(--space-6);
 }
 
 body {

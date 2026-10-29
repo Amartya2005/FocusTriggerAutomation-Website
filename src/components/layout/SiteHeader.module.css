@@ -14,20 +14,24 @@
   min-height: var(--header-height);
 }
 
-/* ---- Wordmark (text only until an approved logo is supplied) ---- */
+/* ---- Logo (official artwork) ---- */
 .wordmark {
   display: inline-flex;
   align-items: center;
   min-height: var(--tap-target);
-  font-size: 1.25rem;
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-text);
-  text-decoration: none;
+  border-radius: var(--radius-sm);
 }
 
-.wordmark:hover {
-  color: var(--color-text);
+/* 36px tall on small screens, 44px from md (matches the image's height attribute). */
+.logo img {
+  width: auto;
+  height: 36px;
+}
+
+@media (min-width: 768px) {
+  .logo img {
+    height: 44px;
+  }
 }
 
 /* ---- Desktop navigation ---- */

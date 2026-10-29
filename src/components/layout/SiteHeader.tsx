@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, type FocusEvent, type KeyboardEvent } from "react";
 import { headerCta, isActivePath, primaryNav, site, type NavItem } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
+import { Logo } from "@/components/ui/Logo";
 import { Container } from "./Container";
 import styles from "./SiteHeader.module.css";
 
@@ -76,8 +77,8 @@ export function SiteHeader() {
   return (
     <header ref={headerRef} className={styles.header}>
       <Container className={styles.bar}>
-        <Link href="/" className={styles.wordmark} aria-label={`${site.name} home — ${site.legalName}`}>
-          {site.name}
+        <Link href="/" className={styles.wordmark} aria-label={`${site.logo.alt} — home`}>
+          <Logo height={44} priority className={styles.logo} />
         </Link>
 
         <nav aria-label="Primary" className={styles.desktopNav}>
