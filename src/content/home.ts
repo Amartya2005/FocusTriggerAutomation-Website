@@ -1,6 +1,9 @@
 /**
  * Homepage copy. Keep every statement within what the company has confirmed:
  * - FocusTag is associated with NFC- and QR-enabled interactions.
+ * - Confirmed interaction model: phone-to-phone NFC, with QR as a fallback.
+ *   Do not describe physical tags, printed codes, location/object
+ *   identification or post-interaction outcomes unless confirmed.
  * - Smart-campus productivity and spatial compliance are product *direction*,
  *   not current capabilities.
  * - Specific software service categories are not yet confirmed, so services
@@ -47,7 +50,8 @@ export const pathways: Pathway[] = [
     label: "Proprietary products",
     title: "Products built and owned by FocusTrigger",
     description: "Our product work begins with FocusTag, a product built around NFC- and QR-enabled interactions.",
-    audience: "Educational institutions and organisations exploring physical-to-digital interactions and smart-campus ideas.",
+    audience:
+      "Educational institutions and organisations interested in phone-based NFC and QR interactions and smart-campus ideas.",
     primary: { label: "Explore FocusTag", href: "/products/focustag" },
     secondary: { label: "All products", href: "/products" },
   },
@@ -68,23 +72,20 @@ export const spotlight = {
   eyebrow: "Product spotlight",
   title: "FocusTag",
   lead:
-    "FocusTag is FocusTrigger’s first proprietary product. It is built around NFC- and QR-enabled interactions: connecting a physical point, such as a tag or a printed code, to a digital response.",
-  conceptLabel: "How an NFC or QR interaction works — illustrative concept",
-  steps: [
+    "FocusTag is FocusTrigger’s first proprietary product. It supports phone-to-phone NFC interaction, with a QR code available as a fallback.",
+  conceptLabel: "FocusTag interaction model — illustrative",
+  methods: [
     {
-      icon: "tap",
-      title: "Tap or scan",
-      text: "A person taps an NFC tag with a phone or scans a QR code.",
+      kind: "primary",
+      icon: "phones",
+      title: "Phone-to-phone NFC",
+      text: "Two phones interact directly through an NFC tap.",
     },
     {
-      icon: "point",
-      title: "Identify the point",
-      text: "The tag or code identifies the specific place or object involved.",
-    },
-    {
-      icon: "respond",
-      title: "Respond digitally",
-      text: "The relevant digital step follows on the person’s device.",
+      kind: "fallback",
+      icon: "qr",
+      title: "QR code",
+      text: "A QR code provides a fallback to the NFC tap.",
     },
   ] as const,
   direction: {

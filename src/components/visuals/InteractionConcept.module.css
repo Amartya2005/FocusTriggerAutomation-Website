@@ -30,29 +30,38 @@
   color: var(--color-text-secondary);
 }
 
-.steps {
+.methods {
   display: grid;
 }
 
-.step {
-  position: relative;
+.method {
+  display: grid;
+}
+
+.row {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-4);
   padding-block: var(--space-4);
 }
 
-/* Vertical connector between steps */
-.step:not(:last-child)::after {
+/* "or, as a fallback" rule between alternative methods */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.divider::before,
+.divider::after {
   content: "";
-  position: absolute;
-  left: 1.5rem;
-  top: calc(var(--space-4) + 3rem + var(--space-2));
-  bottom: calc(-1 * var(--space-2));
-  width: 2px;
-  transform: translateX(-1px);
-  background-image: linear-gradient(var(--color-border-strong) 50%, transparent 50%);
-  background-size: 2px 8px;
+  flex: 1;
+  border-top: 1px dashed var(--color-border-strong);
 }
 
 .icon {
@@ -61,15 +70,43 @@
   width: 3rem;
   height: 3rem;
   border-radius: var(--radius-lg);
+}
+
+.icon.primary {
   background-color: var(--color-accent-soft);
   color: #0f766e;
 }
 
-.stepTitle {
+.icon.fallback {
+  background-color: var(--color-surface-soft);
+  color: var(--color-text-secondary);
+}
+
+.body {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.kind {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-eyebrow);
+  text-transform: uppercase;
+}
+
+.kind.primary {
+  color: #0f766e; /* 5.5:1 on white */
+}
+
+.kind.fallback {
+  color: var(--color-text-secondary);
+}
+
+.methodTitle {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text);
 }
 
-.stepText {
+.methodText {
   color: var(--color-text-secondary);
 }

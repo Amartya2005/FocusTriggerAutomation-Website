@@ -68,7 +68,7 @@ export default function HomePage() {
               </Button>
             </div>
           </div>
-          <InteractionConcept label={spotlight.conceptLabel} steps={spotlight.steps} />
+          <InteractionConcept label={spotlight.conceptLabel} methods={spotlight.methods} />
         </div>
       </Section>
 

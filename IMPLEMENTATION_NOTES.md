@@ -105,14 +105,14 @@ These notes record what has been built, what was tested, and what must be confir
      - headline "Technology products we own. Software we build for clients."
      - a lead sentence that names both pillars
      - two buttons: Explore FocusTag → `/products/focustag`, and Discuss a project → `/contact?enquiry=software`
-     - an original SVG illustration captioned "Not a product screenshot"
+     - an original SVG illustration of two phones linked by an NFC tap, with a QR fallback, plus a client-software window, captioned "Not a product screenshot"
   2. **What we do:** two equal `PathwayCard`s.
      - Proprietary products (teal accent) and Software solutions & services (blue accent).
      - Each card has a description, a "Relevant for" audience note, and main and secondary links.
   3. **FocusTag spotlight:**
-     - a plain-language description limited to NFC- and QR-enabled interactions
+     - a plain-language description of the confirmed interaction model: phone-to-phone NFC interaction, with a QR code available as a fallback
      - a "Product direction" note that presents smart-campus productivity and spatial compliance as vision, not current capability
-     - `InteractionConcept`, a three-step tap/scan → identify → respond sequence, visibly labelled "Concept / illustrative"
+     - `InteractionConcept`, which shows two methods, **Primary: Phone-to-phone NFC** and **Fallback: QR code**, separated by "or, as a fallback". It is not a numbered sequence and is visibly labelled "Concept / FocusTag interaction model — illustrative".
   4. **Services overview:**
      - broad wording only; no specific service categories are named
      - "Common starting points" are taken from the audiences listed in the specification
@@ -148,6 +148,17 @@ These notes record what has been built, what was tested, and what must be confir
   - The decorative "01/02" card numbers measured 1.48:1. They are now `--color-text-muted`.
   - At 320×640 the second hero button sat exactly at the bottom of the screen. I trimmed the lead slightly and tightened the mobile top padding, and it now ends at 605px.
 
+### Phase 2 correction: FocusTag interaction model
+The company confirmed that **FocusTag supports phone-to-phone NFC interaction with QR fallback**. The first Phase 2 version (`4df969c`) implied a physical NFC tag or printed QR code that identifies a place or object, and a "digital response" step. Those were corrected:
+- **Spotlight intro:** now states the confirmed model. The "Relevant for" note on the products card no longer says "physical-to-digital".
+- **`InteractionConcept`:** it now takes `methods` (primary or fallback) instead of `steps`, and renders an unordered list with a visible "or, as a fallback" divider, so QR is never read as a second step. The tap/location-pin/response icons are replaced with a two-phones icon and a QR icon.
+- **`PillarsIllustration`:** it now shows two matching phones linked by an NFC tap, with a separate dashed QR fallback link. The "NFC tag · QR code", "Tap or scan" and "Digital response" labels are gone, along with the checkmark. The caption names the confirmed model.
+- **Not described:** what happens after the interaction, where the QR code is displayed, and any location or object identification.
+- **Revalidation:**
+  - type-check, lint and build all passed
+  - homepage suite: 63 passed, 0 failed, including new checks that block tag, printed-code and location wording in visible text and SVG labels, and that require the diagram to show only Primary: phone-to-phone NFC and Fallback: QR
+  - Phase 1 regression suite: 86 passed, 0 failed
+
 ### Known limitations
 - At very short screens such as 320×568 (iPhone SE, first generation), the second hero button falls below the first screen. It is reachable by scrolling.
 - Testing used Chromium only. Other browsers, real devices and screen readers are scheduled for Phase 6.
@@ -157,7 +168,7 @@ These are written in safe, general language but should be confirmed before publi
 - **How we work principles** (`approach` in `src/content/home.ts`): "Understand the context first", "Be clear about what exists", "Build in reviewable steps". `[REQUIRES COMPANY CONFIRMATION]`
 - **Audience notes and "Common starting points":** these come from the specification's list of key audiences. `[REQUIRES COMPANY CONFIRMATION]`
 - **"Ask about demonstrations, pilots…"** in the closing call to action: this assumes FocusTag demos or pilots can be discussed. It promises nothing, but confirm it. `[PRODUCT CAPABILITY TO BE VERIFIED]`
-- **The FocusTag concept steps** are a generic NFC/QR sequence, labelled as illustrative. Replace them with the confirmed FocusTag flow when it is available. `[PRODUCT CAPABILITY TO BE VERIFIED]`
+- **The FocusTag interaction diagram** shows only the confirmed model (phone-to-phone NFC, QR fallback). Any further detail about the interaction flow or its result needs confirmation before it is added. `[PRODUCT CAPABILITY TO BE VERIFIED]`
 
 ## Missing information register
 
@@ -166,7 +177,7 @@ Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERI
 | # | Item | Status | Needed by |
 | --- | --- | --- | --- |
 | 1 | Approved logo and favicon | `[REQUIRES COMPANY CONFIRMATION]`. A text wordmark "FocusTrigger" is used; there is no favicon yet. | Phase 7, ideally earlier |
-| 2 | FocusTag capabilities that work today (beyond NFC/QR-enabled interactions) | `[PRODUCT CAPABILITY TO BE VERIFIED]` | Phase 3 |
+| 2 | FocusTag capabilities that work today | **Confirmed:** phone-to-phone NFC interaction with QR fallback. Anything further is `[PRODUCT CAPABILITY TO BE VERIFIED]`. | Phase 3 |
 | 3 | FocusTag roadmap / planned features | `[PRODUCT CAPABILITY TO BE VERIFIED]` | Phase 3 |
 | 4 | FocusTag screenshots, product photos or diagrams | `[APPROVED SCREENSHOT OR DIAGRAM NEEDED]` | Phase 3 |
 | 5 | Software service categories (3–5) | `[REQUIRES COMPANY CONFIRMATION]` | Phases 2 and 4 |

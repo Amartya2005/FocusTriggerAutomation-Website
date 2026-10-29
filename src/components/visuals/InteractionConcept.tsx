@@ -1,75 +1,80 @@
 import styles from "./InteractionConcept.module.css";
 
-export type InteractionStep = {
-  icon: "tap" | "point" | "respond";
+export type InteractionMethod = {
+  /** `fallback` methods are presented as alternatives, never as a later step. */
+  kind: "primary" | "fallback";
+  icon: "phones" | "qr";
   title: string;
   text: string;
 };
 
 type InteractionConceptProps = {
-  /** Visible label stating that the sequence is illustrative. */
+  /** Visible label stating that the model is illustrative. */
   label: string;
-  steps: readonly InteractionStep[];
+  methods: readonly InteractionMethod[];
+};
+
+const kindLabel: Record<InteractionMethod["kind"], string> = {
+  primary: "Primary",
+  fallback: "Fallback",
 };
 
 /**
- * Generic NFC/QR interaction sequence. Always labelled as a concept so it is
- * never read as verified FocusTag functionality.
+ * Confirmed FocusTag interaction methods shown as a labelled concept so the
+ * diagram is never read as a production interface or a detailed workflow.
  */
-export function InteractionConcept({ label, steps }: InteractionConceptProps) {
+export function InteractionConcept({ label, methods }: InteractionConceptProps) {
   return (
     <figure className={styles.concept}>
       <figcaption className={styles.label}>
         <span className={styles.badge}>Concept</span>
         {label}
       </figcaption>
-      <ol className={styles.steps} role="list">
-        {steps.map((step, i) => (
-          <li key={step.title} className={styles.step}>
-            <span className={styles.icon} aria-hidden="true">
-              <StepIcon icon={step.icon} />
-            </span>
-            <div>
-              <p className={styles.stepTitle}>
-                <span className="visually-hidden">{`Step ${i + 1}: `}</span>
-                {step.title}
+      <ul className={styles.methods} role="list">
+        {methods.map((method, i) => (
+          <li key={method.title} className={styles.method}>
+            {i > 0 && method.kind === "fallback" && (
+              <p className={styles.divider} aria-hidden="true">
+                <span>or, as a fallback</span>
               </p>
-              <p className={styles.stepText}>{step.text}</p>
+            )}
+            <div className={styles.row}>
+              <span className={`${styles.icon} ${styles[method.kind]}`} aria-hidden="true">
+                <MethodIcon icon={method.icon} />
+              </span>
+              <div className={styles.body}>
+                <p className={`${styles.kind} ${styles[method.kind]}`}>{kindLabel[method.kind]}</p>
+                <p className={styles.methodTitle}>{method.title}</p>
+                <p className={styles.methodText}>{method.text}</p>
+              </div>
             </div>
           </li>
         ))}
-      </ol>
+      </ul>
     </figure>
   );
 }
 
-function StepIcon({ icon }: { icon: InteractionStep["icon"] }) {
+function MethodIcon({ icon }: { icon: InteractionMethod["icon"] }) {
   const common = { width: 24, height: 24, viewBox: "0 0 24 24", fill: "none", focusable: false } as const;
-  const stroke = { stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+  const stroke = { stroke: "currentColor", strokeWidth: 1.75, strokeLinecap: "round", strokeLinejoin: "round" } as const;
 
-  switch (icon) {
-    case "tap":
-      return (
-        <svg {...common}>
-          <rect x="6" y="2.5" width="12" height="19" rx="2.5" {...stroke} />
-          <path d="M10.5 18.5h3" {...stroke} />
-          <path d="M14.5 8a3.5 3.5 0 0 1 0 5M16.5 6a6.5 6.5 0 0 1 0 9" {...stroke} />
-        </svg>
-      );
-    case "point":
-      return (
-        <svg {...common}>
-          <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" {...stroke} />
-          <circle cx="12" cy="10" r="2.5" {...stroke} />
-        </svg>
-      );
-    case "respond":
-      return (
-        <svg {...common}>
-          <rect x="3" y="4" width="18" height="14" rx="2.5" {...stroke} />
-          <path d="M8.5 11l2.5 2.5 4.5-5" {...stroke} />
-          <path d="M9 21h6" {...stroke} />
-        </svg>
-      );
+  if (icon === "phones") {
+    return (
+      <svg {...common}>
+        <rect x="1.5" y="4.5" width="7" height="15" rx="1.75" {...stroke} />
+        <rect x="15.5" y="4.5" width="7" height="15" rx="1.75" {...stroke} />
+        <path d="M10.75 9.75a3.2 3.2 0 0 1 0 4.5M13.25 9.75a3.2 3.2 0 0 0 0 4.5" {...stroke} />
+      </svg>
+    );
   }
+
+  return (
+    <svg {...common}>
+      <rect x="3" y="3" width="7" height="7" rx="1" {...stroke} />
+      <rect x="14" y="3" width="7" height="7" rx="1" {...stroke} />
+      <rect x="3" y="14" width="7" height="7" rx="1" {...stroke} />
+      <path d="M14 14h2.5v2.5H14zM18.5 18.5H21V21h-2.5zM14 19.5h2M19.5 14H21" {...stroke} />
+    </svg>
+  );
 }
