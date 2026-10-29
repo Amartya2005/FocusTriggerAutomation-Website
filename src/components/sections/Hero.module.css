@@ -41,6 +41,10 @@
   max-width: 40rem;
 }
 
+.breadcrumbs {
+  margin-top: calc(-1 * var(--space-3));
+}
+
 .title {
   font-size: var(--font-size-display);
   line-height: 1.08;

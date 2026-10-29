@@ -25,7 +25,7 @@ export function CTASection({ id, title, lead, routes }: CTASectionProps) {
     <Section id={id} tone="dark" labelledBy={headingId}>
       <div className={styles.layout}>
         <SectionHeading id={headingId} title={title} lead={lead} />
-        <ul role="list" className={styles.routes}>
+        <ul role="list" className={`${styles.routes} ${routes.length === 1 ? styles.single : ""}`}>
           {routes.map((route) => (
             <li key={route.title} className={styles.route}>
               <h3 className={styles.routeTitle}>{route.title}</h3>

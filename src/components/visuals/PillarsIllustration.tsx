@@ -1,4 +1,5 @@
-import styles from "./PillarsIllustration.module.css";
+import { PhoneOutline } from "./PhoneOutline";
+import styles from "./Illustration.module.css";
 
 /**
  * Original illustration of FocusTrigger's two areas of work: FocusTag's
@@ -27,8 +28,8 @@ export function PillarsIllustration() {
           FocusTag concept
         </text>
 
-        <Phone x={40} />
-        <Phone x={392} />
+        <PhoneOutline x={40} y={56} shadowFilterId="pi-shadow" />
+        <PhoneOutline x={392} y={56} shadowFilterId="pi-shadow" />
 
         {/* Primary: NFC tap between the phones */}
         <path d="M176 140h56M328 140h56" stroke="#0b5fff" strokeWidth="2.5" strokeLinecap="round" />
@@ -84,26 +85,5 @@ export function PillarsIllustration() {
         and client software. Not a product screenshot.
       </figcaption>
     </figure>
-  );
-}
-
-/** Phone outline with abstract screen content only (no product UI). */
-function Phone({ x }: { x: number }) {
-  return (
-    <g transform={`translate(${x} 56)`}>
-      <g filter="url(#pi-shadow)">
-        <rect width="128" height="220" rx="24" fill="#0f172a" />
-      </g>
-      <rect x="8" y="10" width="112" height="200" rx="17" fill="#ffffff" />
-      <rect x="44" y="17" width="40" height="5" rx="2.5" fill="#e2e8f0" />
-      <rect x="20" y="40" width="88" height="9" rx="4.5" fill="#0f172a" opacity="0.85" />
-      <rect x="20" y="57" width="64" height="7" rx="3.5" fill="#cbd5e1" />
-      <rect x="18" y="78" width="92" height="50" rx="10" fill="#f1f5f9" />
-      <rect x="28" y="92" width="52" height="6" rx="3" fill="#94a3b8" />
-      <rect x="28" y="105" width="70" height="5" rx="2.5" fill="#cbd5e1" />
-      <rect x="18" y="138" width="92" height="50" rx="10" fill="#f1f5f9" />
-      <rect x="28" y="152" width="44" height="6" rx="3" fill="#94a3b8" />
-      <rect x="28" y="165" width="64" height="5" rx="2.5" fill="#cbd5e1" />
-    </g>
   );
 }

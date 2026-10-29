@@ -1,0 +1,95 @@
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+}
+
+.panel {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border-radius: var(--radius-xl);
+}
+
+.current {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  --marker-bg: var(--color-accent-soft);
+  --marker-fg: #0f766e;
+  --badge-bg: var(--color-accent-soft);
+  --badge-fg: #0f766e;
+}
+
+/* Dashed, unfilled treatment signals "not yet" alongside the text label. */
+.vision {
+  border: 2px dashed var(--color-border-strong);
+  background-color: transparent;
+  --marker-bg: var(--color-surface);
+  --marker-fg: var(--color-text-secondary);
+  --badge-bg: var(--color-surface);
+  --badge-fg: var(--color-text-secondary);
+}
+
+.badge {
+  justify-self: start;
+  padding: 0.125rem var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); /* long labels may wrap on narrow screens */
+  background-color: var(--badge-bg);
+  color: var(--badge-fg);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-eyebrow);
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: var(--font-size-h3);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.marker {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-md);
+  background-color: var(--marker-bg);
+  color: var(--marker-fg);
+}
+
+.itemTitle {
+  padding-top: 0.2rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.itemText {
+  color: var(--color-text-secondary);
+}
+
+.note {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gap-lg);
+  }
+}

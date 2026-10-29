@@ -1,0 +1,55 @@
+.split {
+  display: grid;
+  gap: var(--grid-gap-lg);
+  margin-top: var(--space-12);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+}
+
+/* ---- General technology background ---- */
+.background {
+  display: grid;
+  gap: var(--space-4);
+  padding: clamp(1.25rem, 0.75rem + 2vw, 2rem);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface-soft);
+}
+
+.backgroundTitle {
+  font-size: var(--font-size-h4);
+}
+
+.terms {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.term dt {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.term dd {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.backgroundNote {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.comparison {
+  margin-top: var(--space-12);
+}
+
+.faq {
+  margin-top: var(--space-8);
+}

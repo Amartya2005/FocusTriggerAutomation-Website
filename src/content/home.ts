@@ -10,10 +10,12 @@
  *   are described broadly. See IMPLEMENTATION_NOTES.md before adding detail.
  */
 
+import { focustag, focustagContactHref } from "./focustag";
+
 export type LinkAction = { label: string; href: string };
 
 export const contactLinks = {
-  focustag: "/contact?enquiry=focustag",
+  focustag: focustagContactHref,
   software: "/contact?enquiry=software",
 } as const;
 
@@ -73,21 +75,8 @@ export const spotlight = {
   title: "FocusTag",
   lead:
     "FocusTag is FocusTrigger’s first proprietary product. It supports phone-to-phone NFC interaction, with a QR code available as a fallback.",
-  conceptLabel: "FocusTag interaction model — illustrative",
-  methods: [
-    {
-      kind: "primary",
-      icon: "phones",
-      title: "Phone-to-phone NFC",
-      text: "Two phones interact directly through an NFC tap.",
-    },
-    {
-      kind: "fallback",
-      icon: "qr",
-      title: "QR code",
-      text: "A QR code provides a fallback to the NFC tap.",
-    },
-  ] as const,
+  conceptLabel: focustag.interactionModelLabel,
+  methods: focustag.interactionMethods,
   direction: {
     label: "Product direction",
     text: "FocusTag’s broader vision relates to smart-campus productivity and spatial compliance. The FocusTag page separates what is available today from what is planned.",

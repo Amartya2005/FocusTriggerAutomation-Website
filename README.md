@@ -44,10 +44,10 @@ src/
   app/                 Routes (one folder per page) and the root layout
   components/
     layout/            Container, Section, PageHeader, SiteHeader, SiteFooter
-    sections/          Hero, SectionHeading, PathwayCard, CTASection
-    ui/                Button, Eyebrow and other primitives
+    sections/          Hero, SectionHeading, PathwayCard, ProductCard, CapabilityComparison, FaqList, CTASection
+    ui/                Button, Eyebrow, Breadcrumbs and other primitives
     visuals/           Original illustrations and concept diagrams (labelled as illustrative)
-  content/             Page copy, kept separate from layout
+  content/             Page copy and confirmed product facts (focustag.ts), kept separate from layout
   lib/
     site.ts            Company identity, navigation and contact configuration
     metadata.ts        Per-page metadata helper

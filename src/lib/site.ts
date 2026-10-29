@@ -42,7 +42,7 @@ export const primaryNav: NavItem[] = [
     href: "/products",
     children: [
       { label: "All products", href: "/products", description: "Products built by FocusTrigger" },
-      { label: "FocusTag", href: "/products/focustag", description: "NFC- and QR-enabled interactions" },
+      { label: "FocusTag", href: "/products/focustag", description: "Phone-to-phone NFC with QR fallback" },
     ],
   },
   { label: "Services", href: "/services" },

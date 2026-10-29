@@ -13,14 +13,17 @@ type HeroProps = {
   visual?: ReactNode;
   /** Accent treatment: company-wide, product (FocusTag) or services pages. */
   variant?: "corporate" | "product" | "services";
+  /** Optional breadcrumb trail shown above the eyebrow on nested pages. */
+  breadcrumbs?: ReactNode;
 };
 
 /** Page-opening section that owns the page's single `<h1>`. */
-export function Hero({ title, eyebrow, lead, actions, visual, variant = "corporate" }: HeroProps) {
+export function Hero({ title, eyebrow, lead, actions, visual, variant = "corporate", breadcrumbs }: HeroProps) {
   return (
     <section className={`${styles.hero} ${styles[variant]}`} aria-labelledby="hero-title">
       <Container className={visual ? styles.withVisual : styles.single}>
         <div className={styles.content}>
+          {breadcrumbs && <div className={styles.breadcrumbs}>{breadcrumbs}</div>}
           {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
           <h1 id="hero-title" className={styles.title}>
             {title}

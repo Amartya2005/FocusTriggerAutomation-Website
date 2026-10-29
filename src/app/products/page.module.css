@@ -1,0 +1,5 @@
+.productList {
+  display: grid;
+  gap: var(--grid-gap-lg);
+  margin-top: var(--space-12);
+}
