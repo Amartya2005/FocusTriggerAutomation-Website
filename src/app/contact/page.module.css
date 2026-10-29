@@ -1,0 +1,26 @@
+.directTitle {
+  font-size: var(--font-size-h3);
+}
+
+.details {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.details dt {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.details dd {
+  margin: 0;
+  color: var(--color-text);
+}
+
+@media (min-width: 768px) {
+  .details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

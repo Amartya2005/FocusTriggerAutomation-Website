@@ -3,6 +3,7 @@ import { Section } from "@/components/layout/Section";
 import { CTASection } from "@/components/sections/CTASection";
 import { Hero } from "@/components/sections/Hero";
 import { PathwayCard } from "@/components/sections/PathwayCard";
+import { PrincipleList } from "@/components/sections/PrincipleList";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { InteractionConcept } from "@/components/visuals/InteractionConcept";
@@ -108,17 +109,7 @@ export default function HomePage() {
       {/* How we work — truthful principles instead of unverified proof */}
       <Section id="approach" tone="soft" labelledBy="approach-title">
         <SectionHeading id="approach-title" eyebrow={approach.eyebrow} title={approach.title} lead={approach.lead} />
-        <ol role="list" className={styles.principles}>
-          {approach.principles.map((principle, i) => (
-            <li key={principle.title} className={styles.principle}>
-              <span className={styles.principleIndex} aria-hidden="true">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className={styles.principleTitle}>{principle.title}</h3>
-              <p className={styles.principleText}>{principle.text}</p>
-            </li>
-          ))}
-        </ol>
+        <PrincipleList principles={approach.principles} />
       </Section>
 
       <CTASection id="get-started" title={closingCta.title} lead={closingCta.lead} routes={closingCta.routes} />

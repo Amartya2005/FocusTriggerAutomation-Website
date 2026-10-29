@@ -35,7 +35,12 @@ The site runs at http://localhost:3000.
 
 ## Environment
 
-Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL` to the deployed origin.
+Copy `.env.example` to `.env.local` and set:
+
+- `NEXT_PUBLIC_SITE_URL`: the deployed origin.
+- `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT` (optional): a public URL that accepts enquiry-form submissions as a JSON POST. The contact form appears only when this is set, so leave it unset until an approved service exists. The Privacy Policy changes when it is set and must be reviewed first.
+
+Both are read at build time, so rebuild after changing them.
 
 ## Project structure
 
@@ -43,8 +48,9 @@ Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL` to the deploy
 src/
   app/                 Routes (one folder per page) and the root layout
   components/
-    layout/            Container, Section, PageHeader, SiteHeader, SiteFooter
-    sections/          Hero, SectionHeading, PathwayCard, ProductCard, CapabilityComparison, ServiceCard, ProcessSteps, FaqList, CTASection
+    contact/           ContactEnquiry (enquiry-type chooser) and ContactForm
+    layout/            Container, Section, PageHeader, Prose, SiteHeader, SiteFooter
+    sections/          Hero, SectionHeading, PathwayCard, ProductCard, CapabilityComparison, ServiceCard, ProcessSteps, PrincipleList, FaqList, CTASection
     ui/                Button, Eyebrow, Breadcrumbs and other primitives
     visuals/           Original illustrations and concept diagrams (labelled as illustrative)
   content/             Page copy, confirmed product facts (focustag.ts) and service areas (services.ts), kept separate from layout

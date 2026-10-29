@@ -1,0 +1,158 @@
+.form {
+  position: relative;
+  display: grid;
+  gap: var(--space-6);
+}
+
+.requiredNote {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- Fields ---- */
+.field {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.required {
+  color: var(--color-error);
+}
+
+.optional {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+}
+
+.hint {
+  margin-top: calc(-1 * var(--space-1));
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  line-height: 1.4;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 9rem;
+}
+
+.field select {
+  appearance: none;
+  padding-right: var(--space-12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23334155' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-4) center;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--color-text-secondary);
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  border-color: var(--color-primary);
+  border-radius: var(--radius-md);
+}
+
+/* Error state: red border + icon + text, never colour alone */
+.invalid input,
+.invalid select,
+.invalid textarea {
+  border-color: var(--color-error);
+  border-width: 2px;
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: #b91c1c; /* 6.5:1 on white */
+}
+
+.error svg {
+  flex-shrink: 0;
+  margin-top: 0.15em;
+}
+
+/* ---- Summary, status and actions ---- */
+/* Empty live regions stay in the accessibility tree (so later messages are
+   announced) but take up no space. */
+.liveRegion:empty {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.summary {
+  padding: var(--space-4);
+  border: 1px solid #fecaca;
+  border-left: 4px solid var(--color-error);
+  border-radius: var(--radius-md);
+  background-color: var(--color-error-soft);
+  color: #991b1b;
+  font-weight: var(--font-weight-medium);
+}
+
+.summary + .summary {
+  margin-top: var(--space-3);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.result {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid var(--color-success);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-success-soft);
+  color: #14532d;
+}
+
+.resultTitle {
+  font-size: var(--font-size-h4);
+  color: #14532d;
+}

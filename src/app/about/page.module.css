@@ -1,0 +1,55 @@
+.pathways {
+  display: grid;
+  gap: var(--grid-gap);
+  margin-top: var(--space-12);
+}
+
+@media (min-width: 768px) {
+  .pathways {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gap-lg);
+  }
+}
+
+.comparison {
+  margin-top: var(--space-12);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+/* ---- Company details ---- */
+.facts {
+  display: grid;
+  margin-top: var(--space-8);
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fact dt {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.fact dd {
+  margin: 0;
+  color: var(--color-text);
+}
+
+@media (min-width: 768px) {
+  .fact {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--space-6);
+  }
+}

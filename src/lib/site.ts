@@ -33,6 +33,12 @@ export const site = {
     email: null as string | null, // [REQUIRES COMPANY CONFIRMATION]
     phone: null as string | null, // [REQUIRES COMPANY CONFIRMATION]
     address: null as string | null, // [REQUIRES COMPANY CONFIRMATION]
+    /**
+     * Public URL that accepts enquiry-form POSTs (JSON). The contact form is
+     * only rendered when this is set; it must not embed a secret key.
+     * Set NEXT_PUBLIC_CONTACT_FORM_ENDPOINT at build time once approved.
+     */
+    formEndpoint: process.env.NEXT_PUBLIC_CONTACT_FORM_ENDPOINT || null,
   },
 } as const;
 

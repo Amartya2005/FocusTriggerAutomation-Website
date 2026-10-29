@@ -10,8 +10,8 @@ These notes record what has been built, what was tested, and what must be confir
 | 1 | Design system and website foundation | Complete and approved (`fc5af0a`) |
 | 2 | Homepage | Complete and approved (`4df969c`, correction `0ac2172`) |
 | 3 | Products and FocusTag | Complete and approved (`c6f2395`) |
-| 4 | Software Services | Complete, awaiting review |
-| 5 | About, Contact, Privacy Policy (Work only if real content exists) | Not started |
+| 4 | Software Services | Complete and approved (`aa361ba`) |
+| 5 | About, Contact, Privacy Policy (Work only if real content exists) | Complete, awaiting review. The Privacy Policy is a **draft awaiting company and legal approval**. |
 | 6 | Integration and quality assurance | Not started |
 | 7 | Launch readiness and handover | Not started |
 
@@ -319,6 +319,120 @@ These are written in safe, general language but should be confirmed before publi
 - **FAQ answers:** "Can startups discuss an early product idea? — Yes…", and that FocusTag is separate from client projects. `[REQUIRES COMPANY CONFIRMATION]`
 - **Case studies:** none are published. `[REAL CLIENT CASE STUDY NEEDED]`
 
+## Phase 5 — About, Contact and Privacy Policy
+
+### Pre-implementation audit (what the site actually does)
+- **No contact channel exists.** No email, phone or address is configured (`site.contact` is all `null`). There are no API routes, route handlers, server actions, form endpoint, mail library or third-party form service.
+- **No data collection code.** No analytics, tag managers, tracking, cookies, `localStorage`, `sessionStorage` or IndexedDB in the source. No external `<script>` tags. No `console` logging. The runtime dependencies are only `next`, `react` and `react-dom`.
+- **Fonts:** Inter is self-hosted through `next/font`, so no request goes to Google at runtime.
+- **Confirmed at runtime** on the production build (see Validation): no cookies, no Set-Cookie headers, empty storage, and every request same-origin.
+
+### Implemented
+- **`/about`:**
+  - `Hero`, plus "One company, two connected pillars", which reuses the two `PathwayCard`s from the homepage content.
+  - "Our product: FocusTag" uses `CapabilityComparison`. Confirmed functionality (phone-to-phone NFC, QR fallback) is kept separate from the labelled vision (smart-campus productivity, spatial compliance).
+  - "How we work" reuses the homepage principles through the new shared `PrincipleList` component.
+  - "Company details" lists only confirmed facts: legal name, short name, current product and areas of work.
+  - A closing call to action offers Explore FocusTag and Contact.
+  - No founding date, history, team, location, customers or achievements.
+- **`/contact`:**
+  - **Enquiry types:** FocusTag, Software project, Partnership, Other. They are defined in `src/content/contact.ts`, and only these ids are accepted.
+  - **Choosing a type:** `?enquiry=<id>` preselects one; an unknown or missing value selects none. Choosing a type updates the URL in place (no extra history entries) and highlights the card with `aria-current`.
+  - **No endpoint configured (current build):**
+    - The page shows "Online enquiries are not open yet — No information can be submitted here at the moment".
+    - If a type is selected, it shows guidance on what to include.
+    - There are **no form controls**, so nothing pretends to submit.
+  - **Endpoint configured** (`NEXT_PUBLIC_CONTACT_FORM_ENDPOINT`): `ContactForm` renders instead. Its fields:
+    - name and email (both required; email must be a valid format)
+    - organisation (optional)
+    - phone (optional, but validated if entered)
+    - enquiry type (required, kept in sync with the URL and cards)
+    - message (required, at least 20 characters)
+  - **Form behaviour:**
+    - inline errors with an icon and text
+    - an error summary announced to screen readers, and focus moved to the first invalid field
+    - errors update live after the first attempt
+    - a "Sending…" state while submitting
+    - success shown **only after a 2xx response**
+    - a server or network error keeps every entered value and says the enquiry could not be sent
+    - a 15-second timeout
+  - **Payload:** a JSON POST of `{ name, email, organisation, phone, enquiryType, message }`.
+  - **Direct details:** an "Other ways to reach us" section (email, phone, address) appears only once those details are confirmed in `site.contact`.
+- **`/privacy-policy`: DRAFT, awaiting company and legal approval.**
+  - It states only verified behaviour: what information you provide, cookies and browser storage (none), analytics, advertising and third-party content (none), the technical information any browser sends to a web server, and how changes to the policy are handled.
+  - The "Information you provide" section follows the configuration. Unconfigured, it says no form or other way to submit personal information exists. Configured, it lists the form fields and says they go to the form-processing service.
+  - A Contact section appears only if `site.contact.email` is set.
+  - **Left out:** retention periods, legal basis, security assurances, data-sharing statements, address, grievance officer and effective date.
+- **Not created:** `/work`.
+- **New components:**
+  - `src/components/contact/ContactEnquiry` (chooser, unavailable state, and form host; uses `useSearchParams` inside a `Suspense` boundary so the page stays static)
+  - `src/components/contact/ContactForm`
+  - `src/components/sections/PrincipleList` (extracted from the homepage; homepage output unchanged)
+  - `src/components/layout/Prose` (long-form text)
+- **Configuration:** `site.contact.formEndpoint` reads `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT`. It is documented in `.env.example` and the README.
+
+### Validation performed (Phase 5)
+- `npm run typecheck`: passed. `npm run lint`: passed, 0 problems.
+  - Lint first caught a React rule violation (ref callbacks created during render in `ContactForm`). I replaced the refs with focusing by id inside the submit handler, then re-ran lint.
+- `npm run build`: passed, a clean rebuild with no endpoint configured. All 8 routes are static, and the bundle was checked to contain no test endpoint URL.
+- **Phase 5 suite** (final, unconfigured build): **177 passed, 0 failed**.
+  - **Widths:** `/about`, `/contact`, `/contact?enquiry=software` and `/privacy-policy` at 320, 375, 414, 768, 1024, 1280, 1440 and 1920px. No sideways scrolling, clipped text, console errors or failed requests.
+  - **Structure and metadata:** one H1 per page, no skipped heading levels, every section labelled, and canonical and Open Graph tags present. Titles and descriptions are unique across all 7 pages.
+  - **Navigation and links:** every link returns 200. The header marks About and Contact as the current page.
+  - **Contrast:** WCAG AA met. The lowest ratio is 4.68:1 on About, 4.91:1 on Contact and 4.91:1 on Privacy.
+  - **Keyboard:** a focus ring on every tab stop, each visible and drawn on top. Decorative SVGs are hidden from screen readers.
+  - **About:** both pillars appear; the two current functions are kept separate from the labelled vision; company details show confirmed facts only.
+  - **Contact selection:** correct for no parameter, `software`, `focustag`, `partnership`, `other`, and an invalid value. Clicking a card updates the URL and selection without adding history entries.
+  - **Contact honesty:** no form controls appear without an endpoint, the page says plainly that enquiries cannot be submitted yet, nothing claims a message was sent, received or will be answered, and no direct-contact section is shown.
+  - **No made-up details, all 7 pages:** no email addresses, phone numbers, CIN, address, founding/history/team/office claims, credentials, placeholders, `mailto:`/`tel:` links or external links.
+  - **No Work page:** `/work` returns 404, and there is no Work or Case Studies link.
+  - **Privacy wording:** it says no form collects data, and makes no claims about retention, legal basis, security, sharing, address, officer or dates. It has no contact section.
+  - **Privacy claims verified at runtime** (all pages plus in-site navigation):
+    - no cookies and no Set-Cookie headers
+    - `document.cookie` empty, `localStorage` empty, `sessionStorage` empty
+    - **all 205 requests same-origin**, with no third-party scripts, fonts or content
+  - **First screen:** the H1 is visible without scrolling at 1440×900, 375×812 and 320×640.
+- **Contact-form suite** (a **temporary** build with `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT=http://localhost:3999/submit`, pointing at a local mock server; never committed): **28 passed, 0 failed**.
+  - **Preselection and syncing:** `?enquiry=` preselects the select field, and the cards, select field and URL stay in sync both ways.
+  - **Labels:** every field has a visible label; the right fields are required and the rest are marked optional.
+  - **Empty submit:** four fields are flagged, focus moves to Name, errors are linked to their fields, and "There are 4 problems…" is announced. Nothing is sent while the form is invalid.
+  - **Error messages:** specific wording for email, phone and short messages. Focus moves to the first invalid field, errors clear as soon as a field is corrected, and errors use an icon plus text.
+  - **Server error (500):** every value is kept, the page says "could not be sent" with no success claim, and the button is re-enabled.
+  - **Sending:** the button is disabled, its label changes to "Sending…" and the status is announced.
+  - **Success:** shown only after a 200 response, with the heading focused. The POST body contained exactly the six fields.
+  - **Unreachable endpoint:** an error is shown and values are kept.
+  - **Keyboard only:** the full tab order through the form, and Enter submits.
+  - **Mobile (375px):** no overflow with errors shown, all controls are at least 44px tall, and form text (including errors) meets WCAG AA.
+  - **Privacy:** with the form enabled, the policy switches to its form-data section.
+  - **Console:** no unexpected errors.
+- **Regression suites** (final build):
+  - Phase 4: **57 passed, 0 failed**. One failure on the first run came from the test, not the page: the old check failed on any use of the word "submitted", and the contact page now says "No information can be **submitted** here…". I narrowed it to actual delivery claims and re-ran.
+  - Phase 3: **97 passed, 0 failed**.
+  - Homepage: **63 passed, 0 failed** (output unchanged after extracting `PrincipleList`).
+  - Phase 1: **88 passed, 0 failed** (two more link checks than before, because pages now contain more links).
+- **Fixed during testing:**
+  - The enquiry-card link text ran its label and description together ("FocusTagInterest in…"); there is now an explicit space between them.
+  - Two test-script problems: the Back-button expectation was wrong (links deliberately replace history), and one selector was ambiguous.
+
+### Privacy Policy — status: DRAFT, awaiting company and legal approval
+Items needing company or legal review before publication:
+- Registered address and the legal entity details to show (for example, CIN), if required.
+- A privacy contact or grievance officer, and how to reach them. No contact section is shown until an email is set.
+- The hosting provider, and whether it keeps server logs (IP addresses and so on): what it records, where, and for how long. The policy states only that browsers send technical information to the server.
+- The form-processing service, once chosen: its name, data location, retention period and any sharing. The configured-form wording must be reviewed before enabling the form.
+- Retention periods, legal basis or applicable law (for example, India's Digital Personal Data Protection Act, 2023), visitor rights and how to exercise them, an effective date, and a "last updated" line.
+- Whether a Terms of Use page is needed.
+- Review again whenever analytics, cookies, embeds, external fonts or the contact form change.
+
+### Launch blockers (as of Phase 5)
+1. **No public contact channel.** `/contact` honestly says online enquiries are not open, but visitors have no way to reach the company. You need to provide one or both of these:
+   - a form-processing endpoint (a public JSON POST URL, without a secret key), or a decision to approve a server-side handler;
+   - a confirmed email address and/or phone number.
+2. **The Privacy Policy is a draft** awaiting the review items above.
+3. **Production domain and hosting** (`NEXT_PUBLIC_SITE_URL`) are not set, so canonical URLs fall back to localhost.
+4. **No approved logo or favicon.**
+5. **Spam protection** (for example, a honeypot, rate limiting or a CAPTCHA via the provider) needs deciding once a form service is chosen. None is built now, because a fake "success" shown to bots would conflict with the rule that the form never claims delivery falsely.
+
 ## Missing information register
 
 Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERIFIED]`, `[REAL CLIENT CASE STUDY NEEDED]`, `[APPROVED SCREENSHOT OR DIAGRAM NEEDED]`.
@@ -332,13 +446,13 @@ Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERI
 | 5 | Software service categories (3–5) | `[REQUIRES COMPANY CONFIRMATION]`. `/services` shows only two broad areas (Software solutions, Technology services). Add confirmed categories to `serviceAreas` in `src/content/services.ts`. | Before publication |
 | 6 | Technology stack or expertise to list publicly | `[REQUIRES COMPANY CONFIRMATION]`. No technologies are listed. The engineering section cites only the confirmed FocusTag model. | Before publication |
 | 7 | Delivery process actually followed | `[REQUIRES COMPANY CONFIRMATION]`. `/services` shows a modest three-step "How engagements begin" outline, and no methodology, timelines or guarantees. | Before publication |
-| 8 | Approved public projects or case studies | `[REAL CLIENT CASE STUDY NEEDED]`. `/work` is deferred. | Phase 5 |
-| 9 | Company description, founding details, location, team | `[REQUIRES COMPANY CONFIRMATION]` | Phase 5 |
-| 10 | Contact email, phone, registered address, CIN | `[REQUIRES COMPANY CONFIRMATION]`. All are `null` in `src/lib/site.ts`. | Phase 5 |
-| 11 | Contact form delivery method, endpoint and credentials | Not provided | Phases 5 and 7 |
-| 12 | Privacy Policy legal review; decision on Terms of Use | Not provided | Phases 5 and 7 |
+| 8 | Approved public projects or case studies | `[REAL CLIENT CASE STUDY NEEDED]`. `/work` is not built and has no navigation link; it returns 404. | Before any Work page |
+| 9 | Company description, founding details, location, team | `[REQUIRES COMPANY CONFIRMATION]`. `/about` uses only the legal name, the two pillars and confirmed FocusTag facts. | Optional for launch |
+| 10 | Contact email, phone, registered address, CIN | `[REQUIRES COMPANY CONFIRMATION]`. All are `null` in `src/lib/site.ts`. Once set, they appear automatically in the footer and in an "Other ways to reach us" section on `/contact`; the email also appears as the Privacy Policy contact. | **Launch blocker** |
+| 11 | Contact form delivery method and endpoint | Not provided. The form is built and tested, but hidden until `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT` is set. | **Launch blocker** |
+| 12 | Privacy Policy legal review; decision on Terms of Use | The policy is a **draft awaiting approval**; see Phase 5 → Privacy Policy. No Terms of Use page. | **Launch blocker** |
 | 13 | Production domain and hosting provider (`NEXT_PUBLIC_SITE_URL`) | Not provided. Canonical URLs fall back to `http://localhost:3000`. | Phase 7 |
-| 14 | Social profile URLs, if any should appear | Not provided | Phase 5 |
+| 14 | Social profile URLs, if any should appear | Not provided. None are shown. | Optional |
 
 ## Decisions and notes
 - **Phases and commits:** the phase-gated roadmap takes precedence over the specification's "proceed without approval" and "do not commit" instructions. Work is committed and pushed to `claude/sleepy-lamport-nxwwzr` at the end of each approved phase. There is no pull request and no deployment.
