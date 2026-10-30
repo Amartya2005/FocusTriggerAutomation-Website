@@ -73,13 +73,13 @@
 }
 
 .icon.primary {
-  background-color: var(--color-accent-soft);
-  color: #0f766e;
+  background-color: var(--badge-current-bg);
+  color: var(--badge-current-fg);
 }
 
 .icon.fallback {
-  background-color: var(--color-surface-soft);
-  color: var(--color-text-secondary);
+  background-color: var(--badge-neutral-bg);
+  color: var(--badge-neutral-fg);
 }
 
 .body {
@@ -95,7 +95,7 @@
 }
 
 .kind.primary {
-  color: #0f766e; /* 5.5:1 on white */
+  color: var(--color-accent-strong); /* teal-800, 8.3:1 on white */
 }
 
 .kind.fallback {

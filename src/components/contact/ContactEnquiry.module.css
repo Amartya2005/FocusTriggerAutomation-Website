@@ -79,11 +79,15 @@
 
 .typeIndicator {
   flex-shrink: 0;
-  color: var(--color-border-strong);
+  color: var(--input-border); /* unselected option circle, 3.9:1 */
 }
 
 .typeSelected .typeIndicator {
   color: var(--color-primary);
+}
+
+.typeCheck {
+  stroke: var(--button-primary-text);
 }
 
 /* ---- Form panel ---- */

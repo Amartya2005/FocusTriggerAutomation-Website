@@ -132,6 +132,7 @@ Statuses are kept up to date in `IMPLEMENTATION_NOTES.md` → Phase 7.
   - The untouched cropped original is `assets/brand/focustrigger-automation-logo-cropped-original.png`.
   - The favicon and app icons (`src/app/favicon.ico`, `icon.png`, `apple-icon.png`) are cut from the logo's icon mark and sit on the logo's own cream background.
   - `scripts/make-brand-assets.py` (Python 3 with Pillow and NumPy) regenerates all of these from the supplied artwork.
+- **Brand colours:** every colour is a token in `src/styles/tokens.css`. The palette is derived from the logo's sampled teal `#34A487`, black `#000000` and cream `#F9E9D7`. Components use the semantic tokens (`--color-primary`, `--color-surface-cream`, `--button-*`, `--illus-*` and so on), never raw hex. The logo teal is decorative only: use teal-700 (`--color-primary`) for text and buttons. The full palette, rules and contrast results are in `IMPLEMENTATION_NOTES.md` → Phase 8.
 - **Search files:** `robots.txt` and `sitemap.xml` are generated from `src/app/robots.ts` and `src/app/sitemap.ts`. The root layout includes Organization structured data, using confirmed facts only.
 - **Share image:** `src/app/opengraph-image.png` is the unmodified logo centred on its own background, at 1200×630. It is added to every page through `pageMetadata()`.
 

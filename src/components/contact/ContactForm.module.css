@@ -53,9 +53,9 @@
   width: 100%;
   min-height: var(--tap-target);
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--input-border); /* 3.9:1 against white (WCAG 1.4.11) */
   border-radius: var(--radius-md);
-  background-color: var(--color-surface);
+  background-color: var(--input-bg);
   color: var(--color-text);
   line-height: 1.4;
   transition: border-color var(--duration-fast) var(--ease-standard);
@@ -69,7 +69,8 @@
 .field select {
   appearance: none;
   padding-right: var(--space-12);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23334155' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  /* Data-URI SVGs cannot read CSS variables: stroke is --ink-700 (#45403A). */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%2345403A' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--space-4) center;
 }
@@ -77,20 +78,22 @@
 .field input:hover,
 .field select:hover,
 .field textarea:hover {
-  border-color: var(--color-text-secondary);
+  border-color: var(--input-border-hover);
 }
 
 .field input:focus-visible,
 .field select:focus-visible,
 .field textarea:focus-visible {
-  border-color: var(--color-primary);
+  border-color: var(--input-border-focus);
   border-radius: var(--radius-md);
 }
 
-/* Error state: red border + icon + text, never colour alone */
-.invalid input,
-.invalid select,
-.invalid textarea {
+/* Error state: red border + icon + text, never colour alone. `.field.invalid`
+   matches the hover/focus rules' specificity, so the red border persists there
+   (the focus ring still shows outside it). */
+.field.invalid input,
+.field.invalid select,
+.field.invalid textarea {
   border-color: var(--color-error);
   border-width: 2px;
 }
@@ -101,7 +104,7 @@
   gap: var(--space-2);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-medium);
-  color: #b91c1c; /* 6.5:1 on white */
+  color: var(--color-error); /* 6.5:1 on white */
 }
 
 .error svg {
@@ -122,11 +125,11 @@
 
 .summary {
   padding: var(--space-4);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-error-border);
   border-left: 4px solid var(--color-error);
   border-radius: var(--radius-md);
   background-color: var(--color-error-soft);
-  color: #991b1b;
+  color: var(--color-error-strong);
   font-weight: var(--font-weight-medium);
 }
 
@@ -145,14 +148,14 @@
   display: grid;
   gap: var(--space-2);
   padding: var(--space-6);
-  border: 1px solid #bbf7d0;
+  border: 1px solid var(--color-success-border);
   border-left: 4px solid var(--color-success);
   border-radius: var(--radius-lg);
   background-color: var(--color-success-soft);
-  color: #14532d;
+  color: var(--color-success-strong);
 }
 
 .resultTitle {
   font-size: var(--font-size-h4);
-  color: #14532d;
+  color: var(--color-success-strong);
 }

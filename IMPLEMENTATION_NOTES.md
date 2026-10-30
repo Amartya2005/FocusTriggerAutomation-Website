@@ -13,7 +13,8 @@ These notes record what has been built, what was tested, and what must be confir
 | 4 | Software Services | Complete and approved (`aa361ba`) |
 | 5 | About, Contact, Privacy Policy (Work only if real content exists) | Complete and approved (`e09bd51`). The Privacy Policy is still a **draft awaiting company and legal approval**. |
 | 6 | Integration and quality assurance (plus official logo and confirmed email) | Complete and approved (`4ffbb7c`) |
-| 7 | Launch readiness and handover | Complete, awaiting review. **Launch is NOT approved**; see Phase 7 → Launch checklist. |
+| 7 | Launch readiness and handover | Complete and approved (`35f1dd8`). **Launch is NOT approved**; see Phase 7 → Launch checklist. |
+| 8 | Brand colour system and visual refinement | Complete, awaiting review. **Launch is still NOT approved.** |
 
 ## Phase 1 — Foundation
 
@@ -683,7 +684,145 @@ Legend: ✅ complete · ⛔ blocked (needs information or access not yet provide
 4. **Form integration:** keep email only, or provide an endpoint.
 5. **Who runs the browser, device and screen-reader checks,** and against which preview URL.
 6. **Brand:** the lettering capitalisation and a higher-resolution logo. Not blocking.
-7. **The colour-template refinement** is deliberately **not** part of Phase 7. It will be a separate design pass, if approved.
+7. **The colour-template refinement** was deliberately **not** part of Phase 7. It was done separately in Phase 8 (see below).
+
+## Phase 8 — Brand colour system and visual refinement
+
+Starting commit `35f1dd8`. The colours were moved from a generic placeholder palette (bright blue `#0B5FFF`, a cold teal `#00C2A8`, slate greys) onto the official logo's own colours.
+
+This is a colour and consistency pass only. **Unchanged:** layout, spacing, fonts, content, routes, metadata, security headers, the production guard, and the logo and icon files.
+
+### Logo colours (sampled)
+Sampled from `assets/brand/focustrigger-automation-logo-cropped-original.png`. Only solid pixels were counted (each pixel's 3×3 neighbourhood varies by 6 or less), so anti-aliased edges are excluded.
+
+| Colour | Sampled | Reference supplied | Contrast |
+| --- | --- | --- | --- |
+| Teal | `#34A487` | `#34A788` | 3.09:1 on white, 2.60:1 on cream. **Decorative only** (rules, icon accents, large fills). Not for small text, and not behind white text. |
+| Black | `#000000` | `#000000` | 21:1 on white |
+| Cream | `#F9E9D7` | `#F9EAD8` | Surface colour |
+
+### Palette (`src/styles/tokens.css`)
+The palette has three layers:
+1. **Brand reference:** `--brand-teal`, `--brand-black`, `--brand-cream`.
+2. **Two scales:** teal and warm neutral (`ink`).
+3. **Semantic tokens:** what components use. Existing token names were kept and new ones added.
+
+| Teal scale | Hex | | Warm neutral scale | Hex |
+| --- | --- | --- | --- | --- |
+| `--teal-50` | `#EAF6F1` | | `--ink-950` | `#141210` |
+| `--teal-100` | `#D3EEE5` | | `--ink-900` | `#211E1A` |
+| `--teal-300` | `#7DD3BA` | | `--ink-800` | `#3A352F` |
+| `--teal-400` | `#4FBD9E` | | `--ink-700` | `#45403A` |
+| `--teal-500` | `#34A487` (logo teal) | | `--ink-600` | `#655D55` |
+| `--teal-600` | `#22876D` | | `--ink-500` | `#8A7F72` |
+| `--teal-700` | `#1A6E59` | | `--ink-300` | `#CDBFAE` |
+| `--teal-800` | `#145847` | | `--ink-200` | `#E7DCCD` |
+| `--teal-900` | `#0E4236` | | `--ink-100` | `#F3ECE3` |
+| | | | `--ink-50` | `#FCF6EE` |
+
+| Role | Tokens → value |
+| --- | --- |
+| Primary (products, actions) | `--color-primary` teal-700 · `-hover` teal-800 · `-active` teal-900 · `-soft` teal-50 · `-on-dark` teal-300 |
+| Secondary (services) | `--color-secondary` ink-950 · `-hover` ink-700 · `-soft` ink-100 |
+| Accent (decorative) | `--color-accent` logo teal · `-soft` teal-50 · `-strong` teal-800 (small teal labels) |
+| Text | `--color-text` ink-950 · `-secondary` ink-700 · `-muted` ink-600 · `-inverse` `#FAF6F0` |
+| Surfaces | `--color-page` / `--color-surface` white · `--color-surface-cream` logo cream (heroes, page headers) · `-soft` ink-50 (alternate sections) · `-subtle` ink-100 (inset panels) |
+| Borders | `--color-border` ink-200 · `-strong` ink-300 · `--color-divider` ink-200 |
+| Dark surfaces | `--color-dark-surface` ink-950 · `-raised` ink-900 · `-border` ink-800 · `--color-dark-text` `#FAF6F0` · `-secondary` `#D8CFC3` · `-muted` `#A69C90` |
+| Buttons | `--button-primary-bg` / `-bg-hover` / `-bg-active` (primary scale), text white · `--button-secondary-bg` white, `-border` ink-500, `-border-hover` ink-950, `-text` ink-950 |
+| Links and navigation | `--color-link` teal-700 · `-hover` teal-800 · `--color-link-on-dark` teal-300 · `--color-nav-text` ink-700 · `-active` ink-950 · `--color-nav-indicator` teal-700 |
+| Badges | `--badge-current-bg` teal-50 / `-fg` teal-800 · `--badge-neutral-bg` ink-100 / `-fg` ink-700 |
+| Forms | `--input-bg` white · `--input-border` ink-500 · `-hover` ink-700 · `-focus` teal-700 |
+| States | Focus: `--focus-ring-color` teal-700, with an ink-950 / teal-300 ring on dark. Disabled: `--color-disabled-bg` ink-100, `-text` ink-600, `-border` ink-200. Error, warning and success: the existing AA values, now as tokens. |
+| Illustrations | `--illus-ink`, `-text`, `-text-muted`, `-muted`, `-line`, `-border`, `-panel`, `-surface`, `-cream`, `-accent` (teal-700), `-accent-bright` (logo teal), `-accent-soft`, `-accent-strong`, `-dots` |
+
+Shadows are warm-tinted (`rgb(20 18 16 / x)`).
+
+### How it is applied
+- **Header:** white with a warm border. Nav text is ink-700, and the active item has a teal-700 indicator. The Contact button is teal-700.
+- **Heroes and page headers:** solid logo cream on every route. This replaces the blue tint. The Products and FocusTag heroes add one faint logo-teal radial tint. Cream is used for these bands only, not on every section.
+- **Sections:** white alternates with cream-soft (ink-50). Cards are white with warm borders.
+- **The two pillars** follow the logo's teal and black:
+  - **Products / FocusTag:** teal rule, teal-50 icon tile.
+  - **Software services:** black (ink-950) rule, stone icon tile, black "this page" badge.
+
+  Process step numbers stay teal-700 with white text.
+- **Dark CTA bands and footer:** warm near-black `#141210`, used only for those bands. Teal-300 labels and on-dark links. The footer logo keeps its cream tile.
+- **FocusTag:**
+  - "Available now" uses the teal badge.
+  - "Product vision · not current features" uses the neutral stone badge and keeps its dashed border.
+  - Interaction concept: the primary NFC path is teal, the QR fallback is neutral.
+- **Contact:** the selected enquiry card has a teal-700 border on teal-50. Inputs use the ink-500 border, which fixes a 1.5:1 defect. Error and success states come from tokens.
+- **Illustrations:** all hard-coded hex values in `PillarsIllustration`, `PhoneToPhoneIllustration`, `ServicesIllustration` and `PhoneOutline` (about 90 attributes), and in the ProductCard and enquiry checkmarks, became CSS role classes bound to the `--illus-*` and badge tokens. Classes are used rather than `fill="var(--x)"`, because support for `var()` in SVG presentation attributes varies by browser. Shapes are unchanged.
+
+### Contrast (WCAG 2.x; measured in the browser by `qa-phase8.js`)
+| Pair | Ratio | Needed |
+| --- | --- | --- |
+| White text on primary button: default / hover / active | 6.14 / 8.34 / 11.34 | 4.5 |
+| Primary button against cream hero | 5.17 | 3 (non-text) |
+| Secondary button text / border on white / border on cream | 18.69 / 3.92 / 3.30 | 4.5 / 3 / 3 |
+| Nav text / hover; active indicator on white | 10.26 / 18.69; 6.14 | 4.5; 3 |
+| Link / hover on white | 6.14 / 8.34 | 4.5 |
+| Footer link on dark / hover | 12.13 / 18.69 | 4.5 |
+| Teal-700 on cream; teal-800 label on cream | 5.17; 7.02 | 4.5 |
+| Muted text on cream / cream-soft | 5.43 / 6.02 | 4.5 |
+| Dark muted text on dark / raised dark; on-dark link | 6.92 / 6.15; 10.59 | 4.5 |
+| Badges: current / neutral | 7.53 / 8.75 | 4.5 |
+| Input border on white / cream-soft; hover; focus | 3.92 / 3.65; 10.26; 6.14 | 3 |
+| Error text; error summary; success text | 6.47; 7.60; 8.70 | 4.5 |
+| Disabled button text (WCAG-exempt; checked for legibility) | 5.51 | n/a |
+| Focus ring against adjacent colours | ≥ 3 at every tab stop on 7 routes at 1440 and 375 px | 3 |
+| Hero text against rendered pixels, including the tint (worst case) | 6.33 (`/products` @375, the eyebrow) | 4.5 |
+
+### Fixes made along the way
+1. **Form input borders** were `#CBD5E1`, about **1.5:1** on white (fails WCAG 1.4.11). They are now ink-500, 3.92:1.
+2. **Invalid fields:** the hover and focus border rules overrode the red error border, because they had higher specificity. The invalid rule is now `.field.invalid input`, so the border stays red on hover and focus. The focus ring still shows outside it. This predated Phase 8.
+3. **Disabled buttons** used `opacity: 0.55`. They now have an explicit neutral treatment (ink-100 background, ink-600 text at 5.51:1).
+
+### Files changed
+- **Tokens and global styles:** `src/styles/tokens.css` (colour section rewritten) and `src/styles/globals.css` (page background, links, selection).
+- **Layout and UI:** `src/components/ui/Button.module.css`, `layout/SiteHeader.module.css`, `PageHeader.module.css`, `Section.module.css`.
+- **Sections:** `Hero`, `PathwayCard`, `ProductCard` (`.module.css` and `.tsx`), `CapabilityComparison`, `ProcessSteps`, `ServiceCard`.
+- **Contact:** `contact/ContactForm.module.css`, `ContactEnquiry.module.css` and `ContactEnquiry.tsx`.
+- **Visuals:** `visuals/Illustration.module.css`, `InteractionConcept.module.css`, `PillarsIllustration.tsx`, `PhoneToPhoneIllustration.tsx`, `ServicesIllustration.tsx`, `PhoneOutline.tsx`.
+- **Page CSS:** `src/app/services/page.module.css`.
+- **Docs:** this file and `README.md`.
+- **Not changed (verified):** the 7 brand files match their pre-Phase-8 sha256 hashes byte for byte:
+  - `public/brand/focustrigger-automation-logo.png`
+  - `assets/brand/…-cropped-original.png`
+  - `src/app/favicon.ico`, `icon.png`, `apple-icon.png`, `opengraph-image.png`, `opengraph-image.alt.txt`
+
+### Test results (executed in Chromium via Playwright, on this environment's production builds)
+| Check | Result |
+| --- | --- |
+| `npm run typecheck`, `npm run lint`, clean `npm run build` | 0 errors; 0 problems; success (15 static routes) |
+| **Phase 8 suite (new):** no legacy blue, old-teal or slate colour in any computed colour, border, fill, stroke, shadow or gradient, including pseudo-elements, on 7 routes × 3 widths (1440, 834, 375), with FAQ items and menus open | **21/21 clean.** A negative control (injected `#0B5FFF` and `#CBD5E1`) was detected, confirming the scanner works. |
+| **Phase 8 suite:** axe `color-contrast` at 3 widths × 7 routes, in the default state, with details open, with the menu or submenu open, and with an enquiry selected | **0 violations** (66 scans) |
+| **Phase 8 suite:** focus ring ≥ 3:1 against adjacent colours at every tab stop, 7 routes at 1440 and 375 px | **14/14** |
+| **Phase 8 suite:** hover, active and disabled states, plus 19 token pairs | **37/37** (total 138/138) |
+| Form states, measured live (temporary mock-endpoint build, not committed) | **13/13** |
+| Contact-form suite (same temporary build) | **28/28** |
+| Hero text contrast against rendered pixels (`hero-contrast.js`; 7 routes × 1440, 834, 375 and 320 px) | Worst case **6.33:1**; no failures |
+| Phase 7 suite (CSP and security headers at 3 widths, CSP during interaction, axe full rule set, share metadata) | **69/69** |
+| Phase 1–6 regression suites | 88/88, 63/63, 97/97, 57/57, 177/177, 134/134. **No test assertions were changed.** |
+| Production guard: `npm run build:production` with no `NEXT_PUBLIC_SITE_URL` | Refused (exit 1), as designed |
+| Final build output | 0 occurrences of the mock endpoint `localhost:3999` |
+| Source scan | No hex colours outside `tokens.css`, except the two exceptions under Limitations |
+| Lighthouse 13.6 spot-check (local `next start`, default mobile preset) | `/`: 86 / 100 / 100 / 100. `/products/focustag` and `/contact`: 100 / 100 / 100 / 100. |
+| Before and after screenshots: 7 routes × 1440, 834, 375 (full page and first screen) | Captured before any edits (at `35f1dd8`) and after. Reviewed side by side. |
+
+Two fixes were made to the new Phase 8 script's own harness, not to any assertion:
+- background parsing became null-safe;
+- the click that a mouse press and release triggers while sampling `:active` is now prevented, so the page doesn't navigate away mid-check.
+
+**Not verified (not run here):** Firefox, Safari/WebKit, real phones and tablets, screen readers, and Windows High Contrast / forced-colours rendering. Colour perception on real displays is also unchecked.
+
+### Limitations and notes
+- **Hard-coded colours outside `tokens.css`:**
+  - `themeColor: "#ffffff"` in `src/app/layout.tsx`: metadata can't read CSS variables. It matches the white header.
+  - The select chevron in `ContactForm.module.css` is a data-URI SVG with `#45403A` (ink-700), because data URIs can't read CSS variables.
+- **Home Lighthouse Performance** was 86 on this run (93 in Phase 7). The difference is Total Blocking Time in the simulated mobile run. Phase 8 changed no scripts, only CSS and SVG class names. Treat it as lab variance, not field data.
+- The **logo teal** (`#34A487`) is used only where contrast rules allow: rules, icon accents and large fills. Text and buttons use the darker teal-700 and teal-800 from the same hue.
 
 ## Missing information register
 
@@ -711,6 +850,6 @@ Placeholders: `[REQUIRES COMPANY CONFIRMATION]`, `[PRODUCT CAPABILITY TO BE VERI
 - **Reference websites:** they could not be reached from the build environment because the network proxy refused the connections. The design follows the written guidance in the specification only.
 - **Header:** Contact is shown as the header's button instead of a plain link, which meets both "Contact in primary navigation" and "one restrained CTA".
 - **Desktop submenu:** it opens on click or keyboard, not on hover, so its expanded state is always reported accurately and works the same for every input method.
-- **Contrast:** use `--color-text-muted` (#64748B) only on white; it measures about 4.3:1 on `--color-surface-soft`, so use `--color-text-secondary` there instead. Never put white text on teal `--color-accent`.
+- **Contrast (Phase 8 palette):** `--color-text-muted` (#655D55) passes AA on white, cream-soft and cream (5.4:1 or better). Never use the logo teal (`--brand-teal`, `--color-accent`, #34A487) for text or as a background behind white text. It is 3.09:1 on white and 2.60:1 on cream. Use `--color-primary` (teal-700) or `--color-accent-strong` (teal-800) instead.
 - **Copyright year:** the footer year is fixed when the site is built, because pages are prerendered. Rebuilding updates it.
 - **Stub pages:** they contain temporary, general copy only. Each is replaced in its phase.

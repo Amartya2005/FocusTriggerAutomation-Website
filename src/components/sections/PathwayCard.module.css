@@ -20,16 +20,17 @@
   background-color: var(--pillar-accent);
 }
 
+/* The two pillars use the logo's own pair: teal for products, black for services. */
 .product {
   --pillar-accent: var(--color-accent);
   --pillar-icon-bg: var(--color-accent-soft);
-  --pillar-icon: #0f766e;
+  --pillar-icon: var(--color-accent-strong);
 }
 
 .services {
-  --pillar-accent: var(--color-primary);
-  --pillar-icon-bg: var(--color-primary-soft);
-  --pillar-icon: var(--color-primary);
+  --pillar-accent: var(--color-secondary);
+  --pillar-icon-bg: var(--color-secondary-soft);
+  --pillar-icon: var(--color-secondary);
 }
 
 .top {

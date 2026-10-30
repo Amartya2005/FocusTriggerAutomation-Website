@@ -27,8 +27,8 @@
   justify-self: start;
   padding: 0.125rem var(--space-3);
   border-radius: var(--radius-full);
-  background-color: var(--color-accent-soft);
-  color: #0f766e;
+  background-color: var(--badge-current-bg);
+  color: var(--badge-current-fg);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-eyebrow);
@@ -93,4 +93,13 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--space-16);
   }
+}
+
+/* Checkmark icon colours (confirmed functionality) */
+.checkBg {
+  fill: var(--badge-current-bg);
+}
+
+.checkMark {
+  stroke: var(--badge-current-fg);
 }

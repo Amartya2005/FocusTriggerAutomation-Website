@@ -69,8 +69,8 @@ export function ProductCard({
 function CheckIcon() {
   return (
     <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="9" fill="#e0f8f4" />
-      <path d="M6 10.2l2.6 2.6L14 7.4" stroke="#0f766e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <circle className={styles.checkBg} cx="10" cy="10" r="9" />
+      <path className={styles.checkMark} d="M6 10.2l2.6 2.6L14 7.4" fill="none" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

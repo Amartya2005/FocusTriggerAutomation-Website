@@ -63,7 +63,7 @@ export function ContactEnquiryView({ initialType }: { initialType: EnquiryTypeId
                     {isSelected ? (
                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" focusable="false">
                         <circle cx="10" cy="10" r="9" fill="currentColor" />
-                        <path d="M6 10.2l2.6 2.6L14 7.4" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                        <path className={styles.typeCheck} d="M6 10.2l2.6 2.6L14 7.4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     ) : (
                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" focusable="false">

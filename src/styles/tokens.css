@@ -9,47 +9,150 @@
  */
 
 :root {
-  /* ---- Colour: brand ---- */
-  --color-primary: #0b5fff; /* CTAs, links, emphasis. 5.1:1 on white. */
-  --color-primary-hover: #0847b8;
-  --color-primary-soft: #e8f0ff; /* tinted backgrounds behind primary content */
-  --color-accent: #00c2a8; /* small accents/diagrams only — never body text on white */
-  --color-accent-soft: #e0f8f4;
+  /* ======================================================================
+   * Colour — derived from the official logo (sampled solid pixels):
+   *   teal #34A487 · black #000000 · cream #F9E9D7
+   * The logo teal is 3.09:1 on white and 2.60:1 on cream, so it is used for
+   * decoration, large display and non-text accents only. Text, links,
+   * buttons and focus use the darker teal-700/800 (≥ 5.17:1 on cream).
+   * ==================================================================== */
 
-  /* ---- Colour: logo artwork ---- */
-  --color-brand-cream: #f9ead8; /* measured background of the supplied logo */
+  /* ---- Brand reference (logo) ---- */
+  --brand-teal: #34a487;
+  --brand-black: #000000;
+  --brand-cream: #f9e9d7;
+  --color-brand-cream: var(--brand-cream); /* logo tile on dark surfaces */
 
-  /* ---- Colour: neutrals ---- */
-  --color-text: #0f172a; /* main text, dark surfaces */
-  --color-text-secondary: #334155;
-  --color-text-muted: #64748b; /* 4.8:1 on white; use --color-text-secondary on soft backgrounds */
-  --color-border: #e2e8f0;
-  --color-border-strong: #cbd5e1;
-  --color-surface: #ffffff;
-  --color-surface-soft: #f1f5f9;
-  --color-surface-subtle: #fafafa;
+  /* ---- Teal scale (logo hue) ---- */
+  --teal-50: #eaf6f1;
+  --teal-100: #d3eee5;
+  --teal-300: #7dd3ba; /* text/indicators on dark: 10.6:1 on ink-950 */
+  --teal-400: #4fbd9e;
+  --teal-500: var(--brand-teal);
+  --teal-600: #22876d;
+  --teal-700: #1a6e59; /* white text 6.14:1 · on white 6.14:1 · on cream 5.17:1 */
+  --teal-800: #145847; /* 8.34:1 on white · 7.02:1 on cream */
+  --teal-900: #0e4236;
 
-  /* ---- Colour: dark surfaces (footer, contrast sections) ---- */
-  --color-dark-surface: #0f172a;
-  --color-dark-surface-raised: #1e293b;
-  --color-dark-border: #334155;
-  --color-dark-text: #f8fafc;
-  --color-dark-text-secondary: #cbd5e1;
-  --color-dark-text-muted: #94a3b8;
+  /* ---- Warm neutral scale (tuned to the cream) ---- */
+  --ink-950: #141210; /* 18.7:1 on white · 15.7:1 on cream */
+  --ink-900: #211e1a;
+  --ink-800: #3a352f;
+  --ink-700: #45403a; /* 10.3:1 on white · 8.6:1 on cream */
+  --ink-600: #655d55; /* 6.5:1 on white · 5.4:1 on cream */
+  --ink-500: #8a7f72; /* 3.9:1 on white — input borders (non-text ≥ 3:1) */
+  --ink-300: #cdbfae;
+  --ink-200: #e7dccd;
+  --ink-100: #f3ece3;
+  --ink-50: #fcf6ee;
+
+  /* ---- Primary / secondary / accent ---- */
+  --color-primary: var(--teal-700); /* buttons, links, emphasis */
+  --color-primary-hover: var(--teal-800);
+  --color-primary-active: var(--teal-900);
+  --color-primary-soft: var(--teal-50); /* tinted backgrounds behind primary content */
+  --color-primary-on-dark: var(--teal-300);
+  --color-secondary: var(--ink-950); /* services pillar, strong neutral accents */
+  --color-secondary-hover: var(--ink-700);
+  --color-secondary-soft: var(--ink-100);
+  --color-accent: var(--brand-teal); /* decorative rules, fills, large marks only */
+  --color-accent-soft: var(--teal-50);
+  --color-accent-strong: var(--teal-800); /* small teal text/icons on light surfaces */
+
+  /* ---- Text ---- */
+  --color-text: var(--ink-950);
+  --color-text-secondary: var(--ink-700);
+  --color-text-muted: var(--ink-600);
+  --color-text-inverse: #faf6f0;
+
+  /* ---- Surfaces ---- */
+  --color-page: #ffffff;
+  --color-surface: #ffffff; /* default sections, cards */
+  --color-surface-cream: var(--brand-cream); /* hero / page-header band */
+  --color-surface-soft: var(--ink-50); /* alternate sections */
+  --color-surface-subtle: var(--ink-100); /* inset panels */
+
+  /* ---- Borders ---- */
+  --color-border: var(--ink-200);
+  --color-border-strong: var(--ink-300);
+  --color-divider: var(--ink-200);
+
+  /* ---- Dark surfaces (CTA bands, footer) ---- */
+  --color-dark-surface: var(--ink-950);
+  --color-dark-surface-raised: var(--ink-900);
+  --color-dark-border: var(--ink-800);
+  --color-dark-text: var(--color-text-inverse);
+  --color-dark-text-secondary: #d8cfc3; /* 12.1:1 */
+  --color-dark-text-muted: #a69c90; /* 6.9:1 */
   --color-dark-link-hover: #ffffff;
 
-  /* ---- Colour: status ---- */
-  --color-error: #dc2626;
+  /* ---- Links & navigation ---- */
+  --color-link: var(--teal-700);
+  --color-link-hover: var(--teal-800);
+  --color-link-on-dark: var(--teal-300);
+  --color-nav-text: var(--ink-700);
+  --color-nav-text-active: var(--ink-950);
+  --color-nav-indicator: var(--teal-700);
+
+  /* ---- Buttons ---- */
+  --button-primary-bg: var(--color-primary);
+  --button-primary-bg-hover: var(--color-primary-hover);
+  --button-primary-bg-active: var(--color-primary-active);
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: var(--color-surface);
+  --button-secondary-border: var(--ink-500);
+  --button-secondary-border-hover: var(--ink-950);
+  --button-secondary-text: var(--ink-950);
+
+  /* ---- Badges ---- */
+  --badge-current-bg: var(--teal-50);
+  --badge-current-fg: var(--teal-800);
+  --badge-neutral-bg: var(--ink-100);
+  --badge-neutral-fg: var(--ink-700);
+
+  /* ---- Forms ---- */
+  --input-bg: #ffffff;
+  --input-border: var(--ink-500);
+  --input-border-hover: var(--ink-700);
+  --input-border-focus: var(--teal-700);
+
+  /* ---- Disabled ---- */
+  --color-disabled-bg: var(--ink-100);
+  --color-disabled-text: var(--ink-600);
+  --color-disabled-border: var(--ink-200);
+
+  /* ---- Status ---- */
+  --color-error: #b91c1c; /* 6.5:1 on white */
+  --color-error-strong: #991b1b;
   --color-error-soft: #fef2f2;
+  --color-error-border: #fecaca;
   --color-warning: #d97706;
   --color-warning-soft: #fffbeb;
-  --color-success: #16a34a;
+  --color-success: #16a34a; /* indicator rule */
+  --color-success-strong: #14532d; /* text, 8.7:1 on success-soft */
   --color-success-soft: #f0fdf4;
+  --color-success-border: #bbf7d0;
+
+  /* ---- Illustrations (SVG role classes in Illustration.module.css) ---- */
+  --illus-ink: var(--ink-950);
+  --illus-text: var(--ink-700);
+  --illus-line: var(--ink-300);
+  --illus-muted: #a69c90;
+  --illus-surface: #ffffff;
+  --illus-panel: var(--ink-100);
+  --illus-border: var(--ink-200);
+  --illus-cream: var(--brand-cream);
+  --illus-accent: var(--teal-700);
+  --illus-accent-bright: var(--brand-teal);
+  --illus-accent-soft: var(--teal-50);
+  --illus-accent-strong: var(--teal-800);
+  --illus-text-muted: var(--ink-600);
+  --illus-dots: var(--ink-300);
 
   /* ---- Focus ---- */
-  --focus-ring-color: #0b5fff;
+  --focus-ring-color: var(--teal-700); /* 6.1:1 on white · 5.2:1 on cream */
   --focus-ring: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--focus-ring-color);
-  --focus-ring-on-dark: 0 0 0 3px var(--color-dark-surface), 0 0 0 5px #7aa7ff;
+  --focus-ring-on-dark: 0 0 0 3px var(--color-dark-surface), 0 0 0 5px var(--teal-300);
 
   /* ---- Typography ---- */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
@@ -112,9 +215,9 @@
   --radius-full: 999px;
 
   /* ---- Elevation (restrained) ---- */
-  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
-  --shadow-md: 0 4px 12px rgb(15 23 42 / 0.08);
-  --shadow-lg: 0 12px 32px rgb(15 23 42 / 0.12);
+  --shadow-sm: 0 1px 2px rgb(20 18 16 / 0.06); /* warm-tinted (ink-950) */
+  --shadow-md: 0 4px 12px rgb(20 18 16 / 0.08);
+  --shadow-lg: 0 12px 32px rgb(20 18 16 / 0.12);
 
   /* ---- Interaction ---- */
   --tap-target: 2.75rem; /* 44px minimum for important controls */

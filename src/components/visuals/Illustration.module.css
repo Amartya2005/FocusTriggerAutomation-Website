@@ -38,3 +38,24 @@
   color: var(--color-text-muted);
   text-align: center;
 }
+
+/* ---- Colour roles: SVG shapes use these classes, never hard-coded hex ----
+   (classes rather than fill="var(--x)" attributes, whose support varies by browser) */
+.fInk { fill: var(--illus-ink); }
+.fText { fill: var(--illus-text); }
+.fTextMuted { fill: var(--illus-text-muted); }
+.fMuted { fill: var(--illus-muted); }
+.fLine { fill: var(--illus-line); }
+.fBorder { fill: var(--illus-border); }
+.fPanel { fill: var(--illus-panel); }
+.fSurface { fill: var(--illus-surface); }
+.fCream { fill: var(--illus-cream); }
+.fAccent { fill: var(--illus-accent); }
+.fAccentSoft { fill: var(--illus-accent-soft); }
+.fAccentStrong { fill: var(--illus-accent-strong); }
+.sAccent { stroke: var(--illus-accent); }
+.sAccentStrong { stroke: var(--illus-accent-strong); }
+.sMuted { stroke: var(--illus-muted); }
+.sLine { stroke: var(--illus-line); }
+.sBorder { stroke: var(--illus-border); }
+.flood { flood-color: var(--illus-ink); }

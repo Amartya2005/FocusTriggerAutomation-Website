@@ -1,15 +1,15 @@
 .hero {
-  /* Darker brand blue keeps the small uppercase label ≥ 4.5:1 over the hero tint
-     (the default primary measured 4.49:1 at its darkest point on mobile). */
-  --eyebrow-color: var(--color-primary-hover);
+  /* Brand-cream band (the logo's own background). The small uppercase label
+     uses teal-800 so it stays ≥ 4.5:1 even over the product tint. */
+  --eyebrow-color: var(--color-accent-strong);
   position: relative;
   overflow: hidden;
   padding-block: clamp(2rem, 0.75rem + 5vw, 5.5rem) var(--section-padding-y);
   border-bottom: 1px solid var(--color-border);
-  background-color: var(--color-surface-subtle);
+  background-color: var(--color-surface-cream);
 }
 
-/* A single restrained tint behind the visual; no decorative blobs. */
+/* Optional single restrained tint behind the visual; no decorative blobs. */
 .hero::before {
   content: "";
   position: absolute;
@@ -18,16 +18,14 @@
   background: radial-gradient(60rem 30rem at 85% 0%, var(--hero-tint), transparent 70%);
 }
 
-.corporate {
-  --hero-tint: rgb(11 95 255 / 0.07);
-}
-
-.product {
-  --hero-tint: rgb(0 194 168 / 0.09);
-}
-
+.corporate,
 .services {
-  --hero-tint: rgb(11 95 255 / 0.07);
+  --hero-tint: transparent; /* plain brand cream */
+}
+
+/* FocusTag / products: a faint logo-teal glow gives the product its own identity. */
+.product {
+  --hero-tint: color-mix(in srgb, var(--brand-teal) 12%, transparent);
 }
 
 .single,

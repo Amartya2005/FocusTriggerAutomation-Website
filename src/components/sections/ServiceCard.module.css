@@ -16,7 +16,7 @@
   position: absolute;
   inset: 0 0 auto;
   height: 4px;
-  background-color: var(--color-primary);
+  background-color: var(--color-secondary); /* services pillar: brand black */
 }
 
 .icon {
@@ -26,8 +26,8 @@
   height: 3rem;
   margin-bottom: var(--space-2);
   border-radius: var(--radius-lg);
-  background-color: var(--color-primary-soft);
-  color: var(--color-primary);
+  background-color: var(--color-secondary-soft);
+  color: var(--color-secondary);
 }
 
 .title {

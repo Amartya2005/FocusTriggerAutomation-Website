@@ -39,9 +39,10 @@
   background-color: var(--color-surface);
 }
 
+/* "This page" = the services pillar, marked in brand black. */
 .pillarCurrent {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 1px var(--color-primary);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 1px var(--color-secondary);
 }
 
 .pillarHead {
@@ -60,8 +61,8 @@
 .pillarBadge {
   padding: 0.125rem var(--space-3);
   border-radius: var(--radius-full);
-  background-color: var(--color-primary-soft);
-  color: var(--color-primary-hover);
+  background-color: var(--badge-neutral-bg);
+  color: var(--color-secondary);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-eyebrow);
@@ -97,7 +98,7 @@
   gap: var(--space-2);
   align-content: start;
   padding-top: var(--space-6);
-  border-top: 2px solid var(--color-primary);
+  border-top: 2px solid var(--color-secondary);
 }
 
 .audienceTitle {
@@ -131,7 +132,7 @@
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-eyebrow);
   text-transform: uppercase;
-  color: #0f766e;
+  color: var(--color-accent-strong);
 }
 
 .evidenceTitle {

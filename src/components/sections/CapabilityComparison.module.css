@@ -15,20 +15,20 @@
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-sm);
-  --marker-bg: var(--color-accent-soft);
-  --marker-fg: #0f766e;
-  --badge-bg: var(--color-accent-soft);
-  --badge-fg: #0f766e;
+  --marker-bg: var(--badge-current-bg);
+  --marker-fg: var(--badge-current-fg);
+  --badge-bg: var(--badge-current-bg);
+  --badge-fg: var(--badge-current-fg);
 }
 
 /* Dashed, unfilled treatment signals "not yet" alongside the text label. */
 .vision {
   border: 2px dashed var(--color-border-strong);
   background-color: transparent;
-  --marker-bg: var(--color-surface);
-  --marker-fg: var(--color-text-secondary);
-  --badge-bg: var(--color-surface);
-  --badge-fg: var(--color-text-secondary);
+  --marker-bg: var(--badge-neutral-bg);
+  --marker-fg: var(--badge-neutral-fg);
+  --badge-bg: var(--badge-neutral-bg);
+  --badge-fg: var(--badge-neutral-fg);
 }
 
 .badge {
